@@ -625,7 +625,7 @@ const CPU_DATA = [
 ];
 
 // ====================================================================
-// DATA - GPUs (110 models)
+// DATA - GPUs (140 models)
 // ====================================================================
 const GPU_DATA = [
   // === NVIDIA older ===
@@ -792,6 +792,58 @@ const GPU_DATA = [
   {id:"a730m",name:"Arc A730M 12G",brand:"Intel Arc",type:"laptop",vram:"12GB GDDR6",arch:"Alchemist",cores:3072,bClock:1100,bBoost:2050,bus:"192-bit",tdp:120,year:2022,ludashi:350000,timespy:8800,launchPrice:null,retailPrice:null,value:5},
   {id:"a550m",name:"Arc A550M 8G",brand:"Intel Arc",type:"laptop",vram:"8GB GDDR6",arch:"Alchemist",cores:2048,bClock:900,bBoost:2050,bus:"128-bit",tdp:80,year:2022,ludashi:260000,timespy:6200,launchPrice:null,retailPrice:null,value:6},
   {id:"a370m",name:"Arc A370M 4G",brand:"Intel Arc",type:"laptop",vram:"4GB GDDR6",arch:"Alchemist",cores:1024,bClock:1550,bBoost:2050,bus:"64-bit",tdp:50,year:2022,ludashi:170000,timespy:3800,launchPrice:null,retailPrice:null,value:6},
+
+
+
+  // ====================================================================
+  // 🔥 矿卡系列 (Mining / CMP) — 无显示输出，需魔改驱动+核显
+  // ====================================================================
+  {id:"p106-90",name:"P106-90 3G ⛏",brand:"NVIDIA",type:"desktop",vram:"3GB GDDR5",arch:"Pascal",cores:640,bClock:1354,bBoost:1531,bus:"192-bit",tdp:75,year:2017,ludashi:110000,timespy:2500,launchPrice:null,retailPrice:55,value:9,tags:"矿卡"},
+  {id:"p106-100",name:"P106-100 6G ⛏",brand:"NVIDIA",type:"desktop",vram:"6GB GDDR5",arch:"Pascal",cores:1280,bClock:1506,bBoost:1708,bus:"192-bit",tdp:120,year:2017,ludashi:200000,timespy:4200,launchPrice:null,retailPrice:130,value:8,tags:"矿卡"},
+  {id:"p104-100",name:"P104-100 4G ⛏",brand:"NVIDIA",type:"desktop",vram:"4GB GDDR5X",arch:"Pascal",cores:1920,bClock:1607,bBoost:1733,bus:"256-bit",tdp:180,year:2017,ludashi:250000,timespy:6000,launchPrice:null,retailPrice:90,value:8,tags:"矿卡PCIe阉割"},
+  {id:"p102-100",name:"P102-100 10G ⛏",brand:"NVIDIA",type:"desktop",vram:"10GB GDDR5X",arch:"Pascal",cores:3200,bClock:1582,bBoost:1683,bus:"320-bit",tdp:250,year:2018,ludashi:320000,timespy:7000,launchPrice:null,retailPrice:150,value:7,tags:"矿卡PCIe阉割"},
+  {id:"cmp30hx",name:"CMP 30HX 6G ⛏",brand:"NVIDIA",type:"desktop",vram:"6GB GDDR6",arch:"Turing",cores:1408,bClock:1530,bBoost:1785,bus:"192-bit",tdp:125,year:2021,ludashi:240000,timespy:4800,launchPrice:4700,retailPrice:350,value:7,tags:"矿卡"},
+  {id:"cmp40hx",name:"CMP 40HX 8G ⛏",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR6",arch:"Turing",cores:2304,bClock:1470,bBoost:1650,bus:"256-bit",tdp:185,year:2021,ludashi:350000,timespy:7000,launchPrice:5500,retailPrice:450,value:7,tags:"矿卡"},
+  {id:"cmp50hx",name:"CMP 50HX 10G ⛏",brand:"NVIDIA",type:"desktop",vram:"10GB GDDR6",arch:"Turing",cores:3584,bClock:1350,bBoost:1545,bus:"320-bit",tdp:250,year:2021,ludashi:490000,timespy:10000,launchPrice:null,retailPrice:600,value:7,tags:"矿卡"},
+  {id:"cmp90hx",name:"CMP 90HX 10G ⛏",brand:"NVIDIA",type:"desktop",vram:"10GB GDDR6X",arch:"Ampere",cores:6400,bClock:1440,bBoost:1710,bus:"320-bit",tdp:320,year:2021,ludashi:650000,timespy:15000,launchPrice:null,retailPrice:850,value:6,tags:"矿卡"},
+
+  // ====================================================================
+  // 🔬 Tesla / 数据中心计算卡 — 纯计算，无数值仅参考AI算力
+  // ====================================================================
+  {id:"tesla-p40",name:"Tesla P40 24G 🧠",brand:"NVIDIA",type:"desktop",vram:"24GB GDDR5",arch:"Pascal",cores:3840,bClock:1303,bBoost:1531,bus:"384-bit",tdp:250,year:2016,ludashi:null,timespy:null,launchPrice:5699,retailPrice:500,value:9,tags:"计算卡"},
+  {id:"tesla-p4",name:"Tesla P4 8G 🧠",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR5",arch:"Pascal",cores:2560,bClock:810,bBoost:1063,bus:"256-bit",tdp:75,year:2016,ludashi:null,timespy:null,launchPrice:null,retailPrice:220,value:9,tags:"计算卡"},
+  {id:"tesla-p100",name:"Tesla P100 16G 🧠",brand:"NVIDIA",type:"desktop",vram:"16GB HBM2",arch:"Pascal",cores:3584,bClock:1328,bBoost:1480,bus:"4096-bit",tdp:250,year:2016,ludashi:null,timespy:null,launchPrice:null,retailPrice:900,value:6,tags:"计算卡"},
+  {id:"v100",name:"Tesla V100 32G 🧠",brand:"NVIDIA",type:"desktop",vram:"32GB HBM2",arch:"Volta",cores:5120,bClock:1245,bBoost:1530,bus:"4096-bit",tdp:300,year:2018,ludashi:null,timespy:null,launchPrice:null,retailPrice:2500,value:5,tags:"计算卡"},
+  {id:"a100",name:"A100 80G 🧠",brand:"NVIDIA",type:"desktop",vram:"80GB HBM2e",arch:"Ampere",cores:6912,bClock:1410,bBoost:null,bus:"5120-bit",tdp:400,year:2020,ludashi:null,timespy:null,launchPrice:null,retailPrice:80000,value:1,tags:"AI加速卡"},
+  {id:"a800",name:"A800 80G 🧠 🚫",brand:"NVIDIA",type:"desktop",vram:"80GB HBM2e",arch:"Ampere",cores:6912,bClock:1410,bBoost:null,bus:"5120-bit",tdp:400,year:2022,ludashi:null,timespy:null,launchPrice:null,retailPrice:75000,value:1,tags:"中国特供AI卡"},
+  {id:"h100",name:"H100 80G 🧠",brand:"NVIDIA",type:"desktop",vram:"80GB HBM3",arch:"Hopper",cores:16896,bClock:1755,bBoost:null,bus:"5120-bit",tdp:700,year:2022,ludashi:null,timespy:null,launchPrice:null,retailPrice:250000,value:1,tags:"AI加速卡"},
+  {id:"h800",name:"H800 80G 🧠 🚫",brand:"NVIDIA",type:"desktop",vram:"80GB HBM3",arch:"Hopper",cores:16896,bClock:1755,bBoost:null,bus:"5120-bit",tdp:700,year:2023,ludashi:null,timespy:null,launchPrice:null,retailPrice:200000,value:1,tags:"中国特供AI卡"},
+  {id:"a40",name:"A40 48G 🧠",brand:"NVIDIA",type:"desktop",vram:"48GB GDDR6",arch:"Ampere",cores:10752,bClock:1305,bBoost:1740,bus:"384-bit",tdp:300,year:2021,ludashi:null,timespy:17000,launchPrice:null,retailPrice:35000,value:2,tags:"数据中心GPU"},
+  {id:"l40s",name:"L40S 48G 🧠",brand:"NVIDIA",type:"desktop",vram:"48GB GDDR6",arch:"Ada Lovelace",cores:18176,bClock:2520,bBoost:null,bus:"384-bit",tdp:300,year:2023,ludashi:null,timespy:26000,launchPrice:null,retailPrice:45000,value:2,tags:"数据中心GPU"},
+
+  // ====================================================================
+  // 🏗 专业工作站卡 (Pro / Quadro / RTX A-series / Radeon Pro)
+  // ====================================================================
+  {id:"rtxa6000",name:"RTX A6000 48G 🏗",brand:"NVIDIA",type:"desktop",vram:"48GB GDDR6",arch:"Ampere",cores:10752,bClock:1410,bBoost:1800,bus:"384-bit",tdp:300,year:2021,ludashi:850000,timespy:18000,launchPrice:46500,retailPrice:15000,value:3,tags:"工作站卡"},
+  {id:"rtxa5000",name:"RTX A5000 24G 🏗",brand:"NVIDIA",type:"desktop",vram:"24GB GDDR6",arch:"Ampere",cores:8192,bClock:1170,bBoost:1695,bus:"384-bit",tdp:230,year:2021,ludashi:700000,timespy:14000,launchPrice:23000,retailPrice:5000,value:3,tags:"工作站卡"},
+  {id:"rtxa4000",name:"RTX A4000 16G 🏗",brand:"NVIDIA",type:"desktop",vram:"16GB GDDR6",arch:"Ampere",cores:6144,bClock:735,bBoost:1560,bus:"256-bit",tdp:140,year:2021,ludashi:520000,timespy:12000,launchPrice:10000,retailPrice:2500,value:4,tags:"工作站卡"},
+  {id:"rtxa2000",name:"RTX A2000 12G 🏗",brand:"NVIDIA",type:"desktop",vram:"12GB GDDR6",arch:"Ampere",cores:3328,bClock:562,bBoost:1200,bus:"192-bit",tdp:70,year:2021,ludashi:320000,timespy:6500,launchPrice:4500,retailPrice:1200,value:4,tags:"工作站卡"},
+  {id:"radeonpro-w6800",name:"Radeon Pro W6800 32G 🏗",brand:"AMD",type:"desktop",vram:"32GB GDDR6",arch:"RDNA 2",cores:3840,bClock:2075,bBoost:2321,bus:"256-bit",tdp:250,year:2021,ludashi:650000,timespy:14500,launchPrice:22500,retailPrice:4000,value:4,tags:"工作站卡"},
+  {id:"radeonpro-w6600",name:"Radeon Pro W6600 8G 🏗",brand:"AMD",type:"desktop",vram:"8GB GDDR6",arch:"RDNA 2",cores:1792,bClock:2331,bBoost:2580,bus:"128-bit",tdp:130,year:2021,ludashi:360000,timespy:8200,launchPrice:6499,retailPrice:1500,value:5,tags:"工作站卡"},
+  {id:"radeonpro-w6400",name:"Radeon Pro W6400 4G 🏗",brand:"AMD",type:"desktop",vram:"4GB GDDR6",arch:"RDNA 2",cores:768,bClock:2331,bBoost:null,bus:"64-bit",tdp:50,year:2022,ludashi:170000,timespy:3300,launchPrice:2299,retailPrice:800,value:5,tags:"工作站卡"},
+
+  // ====================================================================
+  // 🏗 NVIDIA Quadro 专业卡
+  // ====================================================================
+  {id:"quadro-rtx6000",name:"Quadro RTX 6000 24G 🏗",brand:"NVIDIA",type:"desktop",vram:"24GB GDDR6",arch:"Turing",cores:4608,bClock:1440,bBoost:1770,bus:"384-bit",tdp:295,year:2019,ludashi:580000,timespy:12500,launchPrice:63000,retailPrice:4500,value:3,tags:"工作站卡"},
+  {id:"quadro-rtx5000",name:"Quadro RTX 5000 16G 🏗",brand:"NVIDIA",type:"desktop",vram:"16GB GDDR6",arch:"Turing",cores:3072,bClock:1620,bBoost:1815,bus:"256-bit",tdp:265,year:2019,ludashi:450000,timespy:10000,launchPrice:23000,retailPrice:2500,value:4,tags:"工作站卡"},
+  {id:"quadro-p6000",name:"Quadro P6000 24G 🏗",brand:"NVIDIA",type:"desktop",vram:"24GB GDDR5X",arch:"Pascal",cores:3840,bClock:1506,bBoost:1645,bus:"384-bit",tdp:250,year:2016,ludashi:420000,timespy:9500,launchPrice:52000,retailPrice:2000,value:4,tags:"工作站卡"},
+
+  // ====================================================================
+  // 🧠 Intel 数据中心 / 计算 GPU
+  // ====================================================================
+  {id:"intel-gaudi2",name:"Gaudi 2 96G 🧠",brand:"Intel",type:"desktop",vram:"96GB HBM2e",arch:"Gaudi 2",cores:0,bClock:null,bBoost:null,bus:"—",tdp:600,year:2022,ludashi:null,timespy:null,launchPrice:null,retailPrice:null,value:2,tags:"AI加速卡"},
+  {id:"intel-datacenter-max1100",name:"Data Center Max 1100 🧠",brand:"Intel",type:"desktop",vram:"48GB HBM2e",arch:"Ponte Vecchio",cores:7168,bClock:1550,bBoost:null,bus:"—",tdp:300,year:2023,ludashi:null,timespy:null,launchPrice:null,retailPrice:null,value:2,tags:"AI加速卡"},
 
 ];
 
