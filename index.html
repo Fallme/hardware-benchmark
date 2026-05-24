@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CPU / GPU 天梯图 - 鲁大师 & Time Spy 跑分对比</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --bg3: #21262d;
+  --border: #30363d;
+  --text: #c9d1d9;
+  --text2: #8b949e;
+  --accent: #58a6ff;
+  --green: #3fb950;
+  --orange: #d2991d;
+  --red: #f85149;
+  --purple: #a371f7;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; overflow-x: hidden;
+}
+
+/* ===== TOP BAR ===== */
+.topbar {
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  padding: 12px 24px; display: flex; align-items: center; gap: 20px;
+  position: sticky; top: 0; z-index: 100; flex-wrap: wrap;
+}
+.topbar h1 { font-size: 20px; font-weight: 700; white-space: nowrap; }
+.topbar h1 span { color: var(--accent); }
+.tab-group { display: flex; gap: 4px; background: var(--bg3); border-radius: 8px; padding: 3px; }
+.tab-btn {
+  padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer;
+  font-size: 13px; font-weight: 600; background: transparent; color: var(--text2);
+  transition: all .15s; white-space: nowrap;
+}
+.tab-btn.active { background: var(--accent); color: #fff; }
+.tab-btn:not(.active):hover { color: var(--text); }
+.score-toggle { display: flex; gap: 4px; background: var(--bg3); border-radius: 8px; padding: 3px; margin-left: auto; }
+.score-btn {
+  padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer;
+  font-size: 13px; font-weight: 600; background: transparent; color: var(--text2);
+  transition: all .15s; white-space: nowrap;
+}
+.score-btn.active { background: var(--green); color: #fff; }
+.search-box {
+  background: var(--bg3); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 14px; color: var(--text); font-size: 13px; width: 220px; outline: none;
+}
+.search-box:focus { border-color: var(--accent); }
+.search-box::placeholder { color: var(--text2); }
+
+/* ===== LAYOUT ===== */
+.main-wrap { display: flex; height: calc(100vh - 64px); }
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 240px; min-width: 240px; background: var(--bg2); border-right: 1px solid var(--border);
+  padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px;
+}
+.filter-group label { font-size: 11px; font-weight: 700; color: var(--text2); display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: .5px; }
+.filter-group select {
+  width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px;
+  padding: 7px 10px; color: var(--text); font-size: 13px; outline: none;
+}
+.filter-group select:focus { border-color: var(--accent); }
+
+/* ===== CHART AREA ===== */
+.chart-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.chart-header {
+  padding: 12px 20px; display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text2);
+}
+.chart-container { flex: 1; overflow-y: auto; padding: 16px; position: relative; }
+.bar-list { display: flex; flex-direction: column; gap: 2px; }
+.bar-row {
+  display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 4px;
+  cursor: pointer; transition: background .1s; position: relative; gap: 8px;
+}
+.bar-row:hover { background: var(--bg3); }
+.bar-row.selected { background: rgba(88,166,255,.15); outline: 1px solid var(--accent); }
+.bar-rank { width: 32px; text-align: right; font-size: 11px; color: var(--text2); font-weight: 700; flex-shrink: 0; }
+.bar-name { width: 160px; font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
+.bar-name .tag { font-size: 10px; padding: 1px 5px; border-radius: 3px; margin-left: 4px; vertical-align: 1px; }
+.tag-laptop { background: rgba(163,113,247,.2); color: var(--purple); }
+.tag-server { background: rgba(210,153,29,.2); color: var(--orange); }
+.tag-desktop { display: none; }
+.bar-bg { flex: 1; height: 22px; background: var(--bg3); border-radius: 4px; position: relative; overflow: hidden; min-width: 60px; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width .3s; opacity: .85; }
+.bar-fill.intel { background: linear-gradient(90deg, #0071c5, #00aaff); }
+.bar-fill.amd { background: linear-gradient(90deg, #ed1c24, #f47b20); }
+.bar-fill.nvidia { background: linear-gradient(90deg, #76b900, #a4d420); }
+.bar-score { width: 72px; text-align: right; font-size: 11px; font-weight: 700; color: var(--text); flex-shrink: 0; }
+.bar-value { display: flex; align-items: center; gap: 4px; width: 90px; flex-shrink: 0; }
+.value-stars { color: var(--orange); font-size: 11px; white-space: nowrap; }
+.value-price { font-size: 10px; color: var(--text2); }
+
+/* ===== DETAIL PANEL ===== */
+.detail-panel {
+  width: 320px; min-width: 320px; background: var(--bg2); border-left: 1px solid var(--border);
+  padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px;
+}
+.detail-panel h3 { font-size: 16px; }
+.detail-panel .subtitle { font-size: 12px; color: var(--text2); }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.detail-item { background: var(--bg3); border-radius: 6px; padding: 10px; }
+.detail-item .label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: .5px; }
+.detail-item .val { font-size: 14px; font-weight: 700; margin-top: 2px; }
+.detail-scores { display: flex; gap: 8px; }
+.detail-scores .score-card {
+  flex: 1; background: var(--bg3); border-radius: 8px; padding: 12px; text-align: center;
+}
+.score-card .sc { font-size: 22px; font-weight: 800; }
+.score-card .scl { font-size: 10px; color: var(--text2); }
+.score-card .scl2 { font-size: 14px; font-weight: 700; color: var(--orange); margin-top: 4px; }
+
+/* ===== COMPARE MODE ===== */
+.compare-bar {
+  position: sticky; bottom: 0; background: var(--bg2); border-top: 1px solid var(--border);
+  padding: 10px 20px; display: flex; align-items: center; gap: 12px; z-index: 50;
+}
+.compare-slots { display: flex; gap: 8px; flex: 1; }
+.compare-slot {
+  flex: 1; max-width: 200px; background: var(--bg3); border: 1px dashed var(--border);
+  border-radius: 6px; padding: 8px 12px; font-size: 12px; min-height: 40px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  color: var(--text2); transition: all .15s; text-align: center;
+}
+.compare-slot.filled { border-style: solid; border-color: var(--accent); color: var(--text); font-weight: 600; }
+.compare-btn {
+  padding: 8px 18px; border-radius: 6px; border: none; cursor: pointer;
+  font-size: 13px; font-weight: 600; background: var(--accent); color: #fff;
+  white-space: nowrap;
+}
+.compare-btn:disabled { opacity: .4; cursor: not-allowed; }
+.compare-clear { background: transparent; color: var(--text2); border: 1px solid var(--border); }
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+  padding: 24px; max-width: 900px; width: 95%; max-height: 80vh; overflow-y: auto;
+}
+.modal h2 { margin-bottom: 16px; }
+.modal table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.modal th { background: var(--bg3); padding: 10px 12px; text-align: left; font-size: 11px; color: var(--text2); }
+.modal td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+.modal .best { color: var(--green); font-weight: 700; }
+.modal-close {
+  position: absolute; top: 16px; right: 16px; background: none; border: none;
+  color: var(--text2); font-size: 22px; cursor: pointer;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text2); }
+
+/* ===== CHEVRON ===== */
+.rank-up { color: var(--green); }
+.rank-down { color: var(--red); }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <h1>硬件<span>天梯图</span></h1>
+  <div class="tab-group" id="tabGroup">
+    <button class="tab-btn active" data-tab="cpu">CPU</button>
+    <button class="tab-btn" data-tab="gpu">GPU</button>
+  </div>
+  <div class="score-toggle" id="scoreToggle">
+    <button class="score-btn active" data-score="ludashi">鲁大师</button>
+    <button class="score-btn" data-score="timespy">Time Spy</button>
+  </div>
+  <input type="text" class="search-box" id="searchBox" placeholder="搜索型号... (如 E3-1230, i7-13700K)">
+</div>
+
+<!-- MAIN -->
+<div class="main-wrap">
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="filter-group">
+    <label>平台 / 代际</label>
+    <select id="filterPlatform"><option value="all">全部</option></select>
+  </div>
+  <div class="filter-group">
+    <label>品牌</label>
+    <select id="filterBrand">
+      <option value="all">全部</option>
+      <option value="Intel">Intel</option>
+      <option value="AMD">AMD</option>
+      <option value="NVIDIA">NVIDIA</option>
+      <option value="Intel Arc">Intel Arc</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>类型</label>
+    <select id="filterType">
+      <option value="all">全部</option>
+      <option value="desktop">桌面</option>
+      <option value="laptop">笔记本</option>
+      <option value="server">服务器</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>性价比 ★</label>
+    <select id="filterValue">
+      <option value="0">全部</option>
+      <option value="7">≥ 7 分（高性价比）</option>
+      <option value="8">≥ 8 分（超值）</option>
+      <option value="9">≥ 9 分（神价）</option>
+    </select>
+  </div>
+</div>
+
+<!-- CHART -->
+<div class="chart-area">
+  <div class="chart-header" id="chartHeader">
+    <span id="resultCount">共 0 个型号</span>
+    <span id="sortInfo">按跑分降序排列</span>
+  </div>
+  <div class="chart-container" id="chartContainer">
+    <div id="barList" class="bar-list"></div>
+  </div>
+</div>
+
+<!-- DETAIL -->
+<div class="detail-panel" id="detailPanel">
+  <div style="text-align:center;color:var(--text2);margin-top:80px;font-size:13px;">
+    ← 点击左侧硬件查看详情<br><br>
+    可多选加入底部对比栏
+  </div>
+</div>
+
+</div><!-- /main-wrap -->
+
+<!-- COMPARE BAR -->
+<div class="compare-bar" id="compareBar">
+  <span style="font-size:12px;color:var(--text2);white-space:nowrap;">对比栏</span>
+  <div class="compare-slots" id="compareSlots">
+    <div class="compare-slot" data-slot="0">点击硬件加入对比</div>
+    <div class="compare-slot" data-slot="1">点击硬件加入对比</div>
+    <div class="compare-slot" data-slot="2">点击硬件加入对比</div>
+    <div class="compare-slot" data-slot="3">点击硬件加入对比</div>
+  </div>
+  <button class="compare-btn" id="compareBtn" disabled>开始对比</button>
+  <button class="compare-btn compare-clear" id="compareClear">清空</button>
+</div>
+
+<!-- COMPARE MODAL -->
+<div class="modal-overlay" id="compareModal" style="display:none;">
+  <div style="position:relative;">
+    <div class="modal" id="compareContent"></div>
+  </div>
+</div>
+
+<script>
+// ================================
+// DATA - CPUs (80+ models)
+// ================================
+const CPU_DATA = [
+  // === LGA 1155 (Sandy/Ivy Bridge) ===
+  {id:"i3-2120",name:"i3-2120",brand:"Intel",type:"desktop",platform:"LGA1155",gen:"Sandy Bridge",cores:2,threads:4,bClock:3.3,bBoost:null,cache:"3MB",tdp:65,ram:"DDR3 1333",year:2011,ludashi:85000,timespy:1600,uPrice:25,value:7},
+  {id:"i5-2400",name:"i5-2400",brand:"Intel",type:"desktop",platform:"LGA1155",gen:"Sandy Bridge",cores:4,threads:4,bClock:3.1,bBoost:3.4,cache:"6MB",tdp:95,ram:"DDR3 1333",year:2011,ludashi:110000,timespy:2100,uPrice:40,value:7},
+  {id:"i5-2500k",name:"i5-2500K",brand:"Intel",type:"desktop",platform:"LGA1155",gen:"Sandy Bridge",cores:4,threads:4,bClock:3.3,bBoost:3.7,cache:"6MB",tdp:95,ram:"DDR3 1333",year:2011,ludashi:125000,timespy:2400,uPrice:55,value:6},
+  {id:"i7-2600",name:"i7-2600",brand:"Intel",type:"desktop",platform:"LGA1155",gen:"Sandy Bridge",cores:4,threads:8,bClock:3.4,bBoost:3.8,cache:"8MB",tdp:95,ram:"DDR3 1333",year:2011,ludashi:145000,timespy:2800,uPrice:70,value:6},
+  {id:"i7-2600k",name:"i7-2600K",brand:"Intel",type:"desktop",platform:"LGA1155",gen:"Sandy Bridge",cores:4,threads:8,bClock:3.4,bBoost:3.8,cache:"8MB",tdp:95,ram:"DDR3 1333",year:2011,ludashi:155000,timespy:3000,uPrice:80,value:5},
+  {id:"e3-1230",name:"E3-1230",brand:"Intel",type:"server",platform:"LGA1155",gen:"Sandy Bridge",cores:4,threads:8,bClock:3.2,bBoost:3.6,cache:"8MB",tdp:80,ram:"DDR3 1333",year:2011,ludashi:150000,timespy:2900,uPrice:60,value:7},
+  {id:"e3-1230v2",name:"E3-1230 v2",brand:"Intel",type:"server",platform:"LGA1155",gen:"Ivy Bridge",cores:4,threads:8,bClock:3.3,bBoost:3.7,cache:"8MB",tdp:69,ram:"DDR3 1600",year:2012,ludashi:160000,timespy:3200,uPrice:70,value:7},
+  {id:"e3-1240v2",name:"E3-1240 v2",brand:"Intel",type:"server",platform:"LGA1155",gen:"Ivy Bridge",cores:4,threads:8,bClock:3.4,bBoost:3.8,cache:"8MB",tdp:69,ram:"DDR3 1600",year:2012,ludashi:165000,timespy:3300,uPrice:80,value:6},
+  {id:"i3-3220",name:"i3-3220",brand:"Intel",type:"desktop",platform:"LGA1155",gen:"Ivy Bridge",cores:2,threads:4,bClock:3.3,bBoost:null,cache:"3MB",tdp:55,ram:"DDR3 1600",year:2012,ludashi:90000,timespy:1700,uPrice:20,value:8},
+  {id:"i5-3470",name:"i5-3470",brand:"Intel",type:"desktop",platform:"LGA1155",gen:"Ivy Bridge",cores:4,threads:4,bClock:3.2,bBoost:3.6,cache:"6MB",tdp:77,ram:"DDR3 1600",year:2012,ludashi:120000,timespy:2300,uPrice:45,value:7},
+  {id:"i7-3770",name:"i7-3770",brand:"Intel",type:"desktop",platform:"LGA1155",gen:"Ivy Bridge",cores:4,threads:8,bClock:3.4,bBoost:3.9,cache:"8MB",tdp:77,ram:"DDR3 1600",year:2012,ludashi:160000,timespy:3100,uPrice:80,value:6},
+  {id:"i7-3770k",name:"i7-3770K",brand:"Intel",type:"desktop",platform:"LGA1155",gen:"Ivy Bridge",cores:4,threads:8,bClock:3.5,bBoost:3.9,cache:"8MB",tdp:77,ram:"DDR3 1600",year:2012,ludashi:170000,timespy:3300,uPrice:100,value:5},
+
+  // === LGA 1150 (Haswell) ===
+  {id:"i5-4590",name:"i5-4590",brand:"Intel",type:"desktop",platform:"LGA1150",gen:"Haswell",cores:4,threads:4,bClock:3.3,bBoost:3.7,cache:"6MB",tdp:84,ram:"DDR3 1600",year:2014,ludashi:135000,timespy:2600,uPrice:55,value:7},
+  {id:"i7-4770",name:"i7-4770",brand:"Intel",type:"desktop",platform:"LGA1150",gen:"Haswell",cores:4,threads:8,bClock:3.4,bBoost:3.9,cache:"8MB",tdp:84,ram:"DDR3 1600",year:2013,ludashi:170000,timespy:3400,uPrice:90,value:6},
+  {id:"i7-4790k",name:"i7-4790K",brand:"Intel",type:"desktop",platform:"LGA1150",gen:"Haswell",cores:4,threads:8,bClock:4.0,bBoost:4.4,cache:"8MB",tdp:88,ram:"DDR3 1600",year:2014,ludashi:195000,timespy:3900,uPrice:140,value:5},
+  {id:"e3-1231v3",name:"E3-1231 v3",brand:"Intel",type:"server",platform:"LGA1150",gen:"Haswell",cores:4,threads:8,bClock:3.4,bBoost:3.8,cache:"8MB",tdp:80,ram:"DDR3 1600",year:2014,ludashi:180000,timespy:3600,uPrice:100,value:6},
+
+  // === LGA 1151 (Skylake / Kaby Lake / Coffee Lake) ===
+  {id:"i5-6400",name:"i5-6400",brand:"Intel",type:"desktop",platform:"LGA1151",gen:"Skylake",cores:4,threads:4,bClock:2.7,bBoost:3.3,cache:"6MB",tdp:65,ram:"DDR4 2133",year:2015,ludashi:145000,timespy:2800,uPrice:70,value:6},
+  {id:"i7-6700",name:"i7-6700",brand:"Intel",type:"desktop",platform:"LGA1151",gen:"Skylake",cores:4,threads:8,bClock:3.4,bBoost:4.0,cache:"8MB",tdp:65,ram:"DDR4 2133",year:2015,ludashi:195000,timespy:4200,uPrice:120,value:5},
+  {id:"i7-7700k",name:"i7-7700K",brand:"Intel",type:"desktop",platform:"LGA1151",gen:"Kaby Lake",cores:4,threads:8,bClock:4.2,bBoost:4.5,cache:"8MB",tdp:91,ram:"DDR4 2400",year:2017,ludashi:220000,timespy:5000,uPrice:180,value:5},
+  {id:"i3-8100",name:"i3-8100",brand:"Intel",type:"desktop",platform:"LGA1151v2",gen:"Coffee Lake",cores:4,threads:4,bClock:3.6,bBoost:null,cache:"6MB",tdp:65,ram:"DDR4 2400",year:2017,ludashi:170000,timespy:3800,uPrice:80,value:6},
+  {id:"i5-8400",name:"i5-8400",brand:"Intel",type:"desktop",platform:"LGA1151v2",gen:"Coffee Lake",cores:6,threads:6,bClock:2.8,bBoost:4.0,cache:"9MB",tdp:65,ram:"DDR4 2666",year:2017,ludashi:260000,timespy:7200,uPrice:120,value:7},
+  {id:"i5-9400f",name:"i5-9400F",brand:"Intel",type:"desktop",platform:"LGA1151v2",gen:"Coffee Lake-R",cores:6,threads:6,bClock:2.9,bBoost:4.1,cache:"9MB",tdp:65,ram:"DDR4 2666",year:2019,ludashi:280000,timespy:7600,uPrice:130,value:7},
+  {id:"i5-9600kf",name:"i5-9600KF",brand:"Intel",type:"desktop",platform:"LGA1151v2",gen:"Coffee Lake-R",cores:6,threads:6,bClock:3.7,bBoost:4.6,cache:"9MB",tdp:95,ram:"DDR4 2666",year:2019,ludashi:320000,timespy:8800,uPrice:180,value:6},
+  {id:"i7-8700k",name:"i7-8700K",brand:"Intel",type:"desktop",platform:"LGA1151v2",gen:"Coffee Lake",cores:6,threads:12,bClock:3.7,bBoost:4.7,cache:"12MB",tdp:95,ram:"DDR4 2666",year:2017,ludashi:380000,timespy:9800,uPrice:280,value:5},
+  {id:"i9-9900k",name:"i9-9900K",brand:"Intel",type:"desktop",platform:"LGA1151v2",gen:"Coffee Lake-R",cores:8,threads:16,bClock:3.6,bBoost:5.0,cache:"16MB",tdp:95,ram:"DDR4 2666",year:2018,ludashi:480000,timespy:12800,uPrice:500,value:4},
+
+  // === LGA 1200 (Comet Lake / Rocket Lake) ===
+  {id:"i3-10100f",name:"i3-10100F",brand:"Intel",type:"desktop",platform:"LGA1200",gen:"Comet Lake",cores:4,threads:8,bClock:3.6,bBoost:4.3,cache:"6MB",tdp:65,ram:"DDR4 2666",year:2020,ludashi:240000,timespy:6200,uPrice:100,value:7},
+  {id:"i5-10400f",name:"i5-10400F",brand:"Intel",type:"desktop",platform:"LGA1200",gen:"Comet Lake",cores:6,threads:12,bClock:2.9,bBoost:4.3,cache:"12MB",tdp:65,ram:"DDR4 2666",year:2020,ludashi:340000,timespy:9500,uPrice:150,value:7},
+  {id:"i7-10700k",name:"i7-10700K",brand:"Intel",type:"desktop",platform:"LGA1200",gen:"Comet Lake",cores:8,threads:16,bClock:3.8,bBoost:5.1,cache:"16MB",tdp:125,ram:"DDR4 2933",year:2020,ludashi:520000,timespy:14000,uPrice:350,value:5},
+  {id:"i5-11400f",name:"i5-11400F",brand:"Intel",type:"desktop",platform:"LGA1200",gen:"Rocket Lake",cores:6,threads:12,bClock:2.6,bBoost:4.4,cache:"12MB",tdp:65,ram:"DDR4 3200",year:2021,ludashi:360000,timespy:10000,uPrice:160,value:7},
+  {id:"i7-11700k",name:"i7-11700K",brand:"Intel",type:"desktop",platform:"LGA1200",gen:"Rocket Lake",cores:8,threads:16,bClock:3.6,bBoost:5.0,cache:"16MB",tdp:125,ram:"DDR4 3200",year:2021,ludashi:550000,timespy:15200,uPrice:380,value:5},
+
+  // === LGA 1700 (Alder/Raptor Lake) ===
+  {id:"i3-12100f",name:"i3-12100F",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Alder Lake",cores:4,threads:8,bClock:3.3,bBoost:4.3,cache:"12MB",tdp:60,ram:"DDR5 4800",year:2022,ludashi:350000,timespy:10500,uPrice:120,value:8},
+  {id:"i5-12400f",name:"i5-12400F",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Alder Lake",cores:6,threads:12,bClock:2.5,bBoost:4.4,cache:"18MB",tdp:65,ram:"DDR5 4800",year:2022,ludashi:480000,timespy:14000,uPrice:200,value:8},
+  {id:"i5-12600kf",name:"i5-12600KF",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Alder Lake",cores:10,threads:16,bClock:3.7,bBoost:4.9,cache:"20MB",tdp:125,ram:"DDR5 4800",year:2021,ludashi:620000,timespy:18500,uPrice:350,value:7},
+  {id:"i5-13400f",name:"i5-13400F",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake",cores:10,threads:16,bClock:2.5,bBoost:4.6,cache:"20MB",tdp:65,ram:"DDR5 5600",year:2023,ludashi:550000,timespy:16500,uPrice:280,value:7},
+  {id:"i5-13600kf",name:"i5-13600KF",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake",cores:14,threads:20,bClock:3.5,bBoost:5.1,cache:"24MB",tdp:125,ram:"DDR5 5600",year:2022,ludashi:750000,timespy:22000,uPrice:500,value:6},
+  {id:"i5-14600kf",name:"i5-14600KF",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:14,threads:20,bClock:3.5,bBoost:5.3,cache:"24MB",tdp:125,ram:"DDR5 6000",year:2023,ludashi:800000,timespy:23500,uPrice:600,value:5},
+  {id:"i7-12700k",name:"i7-12700K",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Alder Lake",cores:12,threads:20,bClock:3.6,bBoost:5.0,cache:"25MB",tdp:125,ram:"DDR5 4800",year:2021,ludashi:720000,timespy:21000,uPrice:450,value:6},
+  {id:"i7-13700k",name:"i7-13700K",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake",cores:16,threads:24,bClock:3.4,bBoost:5.4,cache:"30MB",tdp:125,ram:"DDR5 5600",year:2022,ludashi:900000,timespy:26000,uPrice:750,value:5},
+  {id:"i7-14700k",name:"i7-14700K",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:20,threads:28,bClock:3.4,bBoost:5.5,cache:"33MB",tdp:125,ram:"DDR5 6000",year:2023,ludashi:1000000,timespy:28000,uPrice:900,value:5},
+  {id:"i9-12900k",name:"i9-12900K",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Alder Lake",cores:16,threads:24,bClock:3.2,bBoost:5.2,cache:"30MB",tdp:125,ram:"DDR5 4800",year:2021,ludashi:880000,timespy:25000,uPrice:650,value:5},
+  {id:"i9-13900k",name:"i9-13900K",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake",cores:24,threads:32,bClock:3.0,bBoost:5.8,cache:"36MB",tdp:125,ram:"DDR5 5600",year:2022,ludashi:1150000,timespy:32000,uPrice:1100,value:4},
+  {id:"i9-14900k",name:"i9-14900K",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:24,threads:32,bClock:3.2,bBoost:6.0,cache:"36MB",tdp:125,ram:"DDR5 6000",year:2023,ludashi:1250000,timespy:34000,uPrice:1400,value:4},
+
+  // === LGA 2011 / 2011-3 (Xeon E5) ===
+  {id:"e5-2667v2",name:"E5-2667 v2",brand:"Intel",type:"server",platform:"LGA2011",gen:"Ivy Bridge-EP",cores:8,threads:16,bClock:3.3,bBoost:4.0,cache:"25MB",tdp:130,ram:"DDR3 1866",year:2013,ludashi:220000,timespy:5500,uPrice:60,value:8},
+  {id:"e5-2680v2",name:"E5-2680 v2",brand:"Intel",type:"server",platform:"LGA2011",gen:"Ivy Bridge-EP",cores:10,threads:20,bClock:2.8,bBoost:3.6,cache:"25MB",tdp:115,ram:"DDR3 1866",year:2013,ludashi:250000,timespy:6200,uPrice:70,value:8},
+  {id:"e5-2690v2",name:"E5-2690 v2",brand:"Intel",type:"server",platform:"LGA2011",gen:"Ivy Bridge-EP",cores:10,threads:20,bClock:3.0,bBoost:3.6,cache:"25MB",tdp:130,ram:"DDR3 1866",year:2013,ludashi:260000,timespy:6400,uPrice:85,value:7},
+  {id:"e5-2666v3",name:"E5-2666 v3",brand:"Intel",type:"server",platform:"LGA2011-3",gen:"Haswell-EP",cores:10,threads:20,bClock:2.9,bBoost:3.5,cache:"25MB",tdp:135,ram:"DDR4 2133",year:2014,ludashi:300000,timespy:7500,uPrice:55,value:8},
+  {id:"e5-2678v3",name:"E5-2678 v3",brand:"Intel",type:"server",platform:"LGA2011-3",gen:"Haswell-EP",cores:12,threads:24,bClock:2.5,bBoost:3.3,cache:"30MB",tdp:120,ram:"DDR4 2133",year:2015,ludashi:350000,timespy:9000,uPrice:80,value:8},
+  {id:"e5-2680v4",name:"E5-2680 v4",brand:"Intel",type:"server",platform:"LGA2011-3",gen:"Broadwell-EP",cores:14,threads:28,bClock:2.4,bBoost:3.3,cache:"35MB",tdp:120,ram:"DDR4 2400",year:2016,ludashi:400000,timespy:10500,uPrice:100,value:8},
+  {id:"e5-2696v3",name:"E5-2696 v3",brand:"Intel",type:"server",platform:"LGA2011-3",gen:"Haswell-EP",cores:18,threads:36,bClock:2.3,bBoost:3.8,cache:"45MB",tdp:145,ram:"DDR4 2133",year:2014,ludashi:480000,timespy:12000,uPrice:120,value:8},
+  {id:"e5-2699v4",name:"E5-2699 v4",brand:"Intel",type:"server",platform:"LGA2011-3",gen:"Broadwell-EP",cores:22,threads:44,bClock:2.2,bBoost:3.6,cache:"55MB",tdp:145,ram:"DDR4 2400",year:2016,ludashi:550000,timespy:14000,uPrice:200,value:7},
+
+  // === AMD AM4 ===
+  {id:"r3-3100",name:"R3 3100",brand:"AMD",type:"desktop",platform:"AM4",gen:"Zen 2",cores:4,threads:8,bClock:3.6,bBoost:3.9,cache:"18MB",tdp:65,ram:"DDR4 3200",year:2020,ludashi:280000,timespy:7800,uPrice:80,value:8},
+  {id:"r5-3600",name:"R5 3600",brand:"AMD",type:"desktop",platform:"AM4",gen:"Zen 2",cores:6,threads:12,bClock:3.6,bBoost:4.2,cache:"35MB",tdp:65,ram:"DDR4 3200",year:2019,ludashi:380000,timespy:10500,uPrice:140,value:8},
+  {id:"r5-5500",name:"R5 5500",brand:"AMD",type:"desktop",platform:"AM4",gen:"Zen 3",cores:6,threads:12,bClock:3.6,bBoost:4.2,cache:"19MB",tdp:65,ram:"DDR4 3200",year:2022,ludashi:420000,timespy:11500,uPrice:170,value:7},
+  {id:"r5-5600",name:"R5 5600",brand:"AMD",type:"desktop",platform:"AM4",gen:"Zen 3",cores:6,threads:12,bClock:3.5,bBoost:4.4,cache:"35MB",tdp:65,ram:"DDR4 3200",year:2022,ludashi:480000,timespy:13000,uPrice:220,value:7},
+  {id:"r5-5600x",name:"R5 5600X",brand:"AMD",type:"desktop",platform:"AM4",gen:"Zen 3",cores:6,threads:12,bClock:3.7,bBoost:4.6,cache:"35MB",tdp:65,ram:"DDR4 3200",year:2020,ludashi:500000,timespy:13800,uPrice:260,value:6},
+  {id:"r7-3700x",name:"R7 3700X",brand:"AMD",type:"desktop",platform:"AM4",gen:"Zen 2",cores:8,threads:16,bClock:3.6,bBoost:4.4,cache:"36MB",tdp:65,ram:"DDR4 3200",year:2019,ludashi:500000,timespy:14000,uPrice:200,value:7},
+  {id:"r7-5700x3d",name:"R7 5700X3D",brand:"AMD",type:"desktop",platform:"AM4",gen:"Zen 3",cores:8,threads:16,bClock:3.0,bBoost:4.1,cache:"100MB",tdp:105,ram:"DDR4 3200",year:2024,ludashi:680000,timespy:19000,uPrice:500,value:6},
+  {id:"r7-5800x3d",name:"R7 5800X3D",brand:"AMD",type:"desktop",platform:"AM4",gen:"Zen 3",cores:8,threads:16,bClock:3.4,bBoost:4.5,cache:"100MB",tdp:105,ram:"DDR4 3200",year:2022,ludashi:720000,timespy:20000,uPrice:600,value:6},
+  {id:"r9-3900x",name:"R9 3900X",brand:"AMD",type:"desktop",platform:"AM4",gen:"Zen 2",cores:12,threads:24,bClock:3.8,bBoost:4.6,cache:"70MB",tdp:105,ram:"DDR4 3200",year:2019,ludashi:700000,timespy:19500,uPrice:350,value:7},
+  {id:"r9-5900x",name:"R9 5900X",brand:"AMD",type:"desktop",platform:"AM4",gen:"Zen 3",cores:12,threads:24,bClock:3.7,bBoost:4.8,cache:"70MB",tdp:105,ram:"DDR4 3200",year:2020,ludashi:850000,timespy:24000,uPrice:600,value:6},
+  {id:"r9-5950x",name:"R9 5950X",brand:"AMD",type:"desktop",platform:"AM4",gen:"Zen 3",cores:16,threads:32,bClock:3.4,bBoost:4.9,cache:"72MB",tdp:105,ram:"DDR4 3200",year:2020,ludashi:1050000,timespy:29000,uPrice:1000,value:4},
+
+  // === AMD AM5 ===
+  {id:"r5-7500f",name:"R5 7500F",brand:"AMD",type:"desktop",platform:"AM5",gen:"Zen 4",cores:6,threads:12,bClock:3.7,bBoost:5.0,cache:"38MB",tdp:65,ram:"DDR5 5200",year:2023,ludashi:580000,timespy:16000,uPrice:350,value:7},
+  {id:"r5-7600",name:"R5 7600",brand:"AMD",type:"desktop",platform:"AM5",gen:"Zen 4",cores:6,threads:12,bClock:3.8,bBoost:5.1,cache:"38MB",tdp:65,ram:"DDR5 5200",year:2023,ludashi:620000,timespy:17000,uPrice:400,value:7},
+  {id:"r5-7600x",name:"R5 7600X",brand:"AMD",type:"desktop",platform:"AM5",gen:"Zen 4",cores:6,threads:12,bClock:4.7,bBoost:5.3,cache:"38MB",tdp:105,ram:"DDR5 5200",year:2022,ludashi:650000,timespy:18000,uPrice:450,value:6},
+  {id:"r7-7800x3d",name:"R7 7800X3D",brand:"AMD",type:"desktop",platform:"AM5",gen:"Zen 4",cores:8,threads:16,bClock:4.2,bBoost:5.0,cache:"104MB",tdp:120,ram:"DDR5 5200",year:2023,ludashi:850000,timespy:24000,uPrice:900,value:5},
+  {id:"r9-7950x",name:"R9 7950X",brand:"AMD",type:"desktop",platform:"AM5",gen:"Zen 4",cores:16,threads:32,bClock:4.5,bBoost:5.7,cache:"80MB",tdp:170,ram:"DDR5 5200",year:2022,ludashi:1200000,timespy:33000,uPrice:1400,value:4},
+
+  // === Laptop CPUs ===
+  {id:"i5-8250u",name:"i5-8250U",brand:"Intel",type:"laptop",platform:"BGA",gen:"Kaby Lake-R",cores:4,threads:8,bClock:1.6,bBoost:3.4,cache:"6MB",tdp:15,ram:"DDR4 2400",year:2017,ludashi:180000,timespy:4200,uPrice:null,value:4},
+  {id:"i7-8750h",name:"i7-8750H",brand:"Intel",type:"laptop",platform:"BGA",gen:"Coffee Lake",cores:6,threads:12,bClock:2.2,bBoost:4.1,cache:"9MB",tdp:45,ram:"DDR4 2666",year:2018,ludashi:280000,timespy:7500,uPrice:null,value:5},
+  {id:"i7-9750h",name:"i7-9750H",brand:"Intel",type:"laptop",platform:"BGA",gen:"Coffee Lake-R",cores:6,threads:12,bClock:2.6,bBoost:4.5,cache:"12MB",tdp:45,ram:"DDR4 2666",year:2019,ludashi:310000,timespy:8200,uPrice:null,value:5},
+  {id:"i7-11800h",name:"i7-11800H",brand:"Intel",type:"laptop",platform:"BGA",gen:"Tiger Lake",cores:8,threads:16,bClock:2.3,bBoost:4.6,cache:"24MB",tdp:45,ram:"DDR4 3200",year:2021,ludashi:520000,timespy:14500,uPrice:null,value:5},
+  {id:"i7-12700h",name:"i7-12700H",brand:"Intel",type:"laptop",platform:"BGA",gen:"Alder Lake",cores:14,threads:20,bClock:2.3,bBoost:4.7,cache:"24MB",tdp:45,ram:"DDR5 4800",year:2022,ludashi:680000,timespy:19500,uPrice:null,value:6},
+  {id:"i7-13700h",name:"i7-13700H",brand:"Intel",type:"laptop",platform:"BGA",gen:"Raptor Lake",cores:14,threads:20,bClock:2.4,bBoost:5.0,cache:"24MB",tdp:45,ram:"DDR5 5200",year:2023,ludashi:750000,timespy:22000,uPrice:null,value:5},
+  {id:"r5-5600h",name:"R5 5600H",brand:"AMD",type:"laptop",platform:"FP6",gen:"Zen 3",cores:6,threads:12,bClock:3.3,bBoost:4.2,cache:"19MB",tdp:45,ram:"DDR4 3200",year:2021,ludashi:380000,timespy:11000,uPrice:null,value:6},
+  {id:"r7-5800h",name:"R7 5800H",brand:"AMD",type:"laptop",platform:"FP6",gen:"Zen 3",cores:8,threads:16,bClock:3.2,bBoost:4.4,cache:"20MB",tdp:45,ram:"DDR4 3200",year:2021,ludashi:500000,timespy:14000,uPrice:null,value:6},
+  {id:"r7-6800h",name:"R7 6800H",brand:"AMD",type:"laptop",platform:"FP7",gen:"Zen 3+",cores:8,threads:16,bClock:3.2,bBoost:4.7,cache:"20MB",tdp:45,ram:"DDR5 4800",year:2022,ludashi:580000,timespy:16500,uPrice:null,value:6},
+  {id:"r7-7840hs",name:"R7 7840HS",brand:"AMD",type:"laptop",platform:"FP7r2",gen:"Zen 4",cores:8,threads:16,bClock:3.8,bBoost:5.1,cache:"24MB",tdp:35,ram:"DDR5 5600",year:2023,ludashi:720000,timespy:21000,uPrice:null,value:6},
+  {id:"ultra7-155h",name:"Ultra 7 155H",brand:"Intel",type:"laptop",platform:"BGA",gen:"Meteor Lake",cores:16,threads:22,bClock:3.8,bBoost:4.8,cache:"24MB",tdp:28,ram:"DDR5 5600",year:2023,ludashi:650000,timespy:18500,uPrice:null,value:5},
+  {id:"ultra9-285k",name:"Ultra 9 285K",brand:"Intel",type:"desktop",platform:"LGA1851",gen:"Arrow Lake",cores:24,threads:24,bClock:3.7,bBoost:5.7,cache:"40MB",tdp:125,ram:"DDR5 6400",year:2024,ludashi:1300000,timespy:36000,uPrice:1800,value:4},
+];
+
+// ================================
+// DATA - GPUs (50+ models)
+// ================================
+const GPU_DATA = [
+  // === NVIDIA GTX 600-900 ===
+  {id:"gtx660",name:"GTX 660 2G",brand:"NVIDIA",type:"desktop",vram:"2GB GDDR5",arch:"Kepler",cores:960,bClock:980,bBoost:1033,bus:"192-bit",tdp:140,year:2012,ludashi:105000,timespy:null,uPrice:80,value:5},
+  {id:"gtx750ti",name:"GTX 750 Ti 2G",brand:"NVIDIA",type:"desktop",vram:"2GB GDDR5",arch:"Maxwell",cores:640,bClock:1020,bBoost:1085,bus:"128-bit",tdp:60,year:2014,ludashi:120000,timespy:null,uPrice:90,value:6},
+  {id:"gtx960",name:"GTX 960 4G",brand:"NVIDIA",type:"desktop",vram:"4GB GDDR5",arch:"Maxwell",cores:1024,bClock:1127,bBoost:1178,bus:"128-bit",tdp:120,year:2015,ludashi:160000,timespy:2500,uPrice:120,value:6},
+  {id:"gtx970",name:"GTX 970 4G",brand:"NVIDIA",type:"desktop",vram:"4GB GDDR5",arch:"Maxwell",cores:1664,bClock:1050,bBoost:1178,bus:"256-bit",tdp:145,year:2014,ludashi:195000,timespy:3800,uPrice:150,value:6},
+  {id:"gtx980ti",name:"GTX 980 Ti 6G",brand:"NVIDIA",type:"desktop",vram:"6GB GDDR5",arch:"Maxwell",cores:2816,bClock:1000,bBoost:1075,bus:"384-bit",tdp:250,year:2015,ludashi:240000,timespy:5600,uPrice:250,value:6},
+
+  // === NVIDIA GTX 10 ===
+  {id:"gtx1050ti",name:"GTX 1050 Ti 4G",brand:"NVIDIA",type:"desktop",vram:"4GB GDDR5",arch:"Pascal",cores:768,bClock:1290,bBoost:1392,bus:"128-bit",tdp:75,year:2016,ludashi:165000,timespy:2600,uPrice:150,value:5},
+  {id:"gtx1060-6g",name:"GTX 1060 6G",brand:"NVIDIA",type:"desktop",vram:"6GB GDDR5",arch:"Pascal",cores:1280,bClock:1506,bBoost:1708,bus:"192-bit",tdp:120,year:2016,ludashi:220000,timespy:4300,uPrice:220,value:6},
+  {id:"gtx1070",name:"GTX 1070 8G",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR5",arch:"Pascal",cores:1920,bClock:1506,bBoost:1683,bus:"256-bit",tdp:150,year:2016,ludashi:280000,timespy:6200,uPrice:300,value:6},
+  {id:"gtx1080ti",name:"GTX 1080 Ti 11G",brand:"NVIDIA",type:"desktop",vram:"11GB GDDR5X",arch:"Pascal",cores:3584,bClock:1480,bBoost:1582,bus:"352-bit",tdp:250,year:2017,ludashi:380000,timespy:9800,uPrice:450,value:6},
+
+  // === NVIDIA RTX 20 ===
+  {id:"rtx2060",name:"RTX 2060 6G",brand:"NVIDIA",type:"desktop",vram:"6GB GDDR6",arch:"Turing",cores:1920,bClock:1365,bBoost:1680,bus:"192-bit",tdp:160,year:2019,ludashi:320000,timespy:7600,uPrice:350,value:5},
+  {id:"rtx2060s",name:"RTX 2060 Super 8G",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR6",arch:"Turing",cores:2176,bClock:1470,bBoost:1650,bus:"256-bit",tdp:175,year:2019,ludashi:370000,timespy:8800,uPrice:420,value:5},
+  {id:"rtx2070s",name:"RTX 2070 Super 8G",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR6",arch:"Turing",cores:2560,bClock:1605,bBoost:1770,bus:"256-bit",tdp:215,year:2019,ludashi:420000,timespy:10500,uPrice:500,value:5},
+  {id:"rtx2080ti",name:"RTX 2080 Ti 11G",brand:"NVIDIA",type:"desktop",vram:"11GB GDDR6",arch:"Turing",cores:4352,bClock:1350,bBoost:1545,bus:"352-bit",tdp:250,year:2018,ludashi:500000,timespy:14500,uPrice:700,value:5},
+
+  // === NVIDIA RTX 30 ===
+  {id:"rtx3050",name:"RTX 3050 8G",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR6",arch:"Ampere",cores:2560,bClock:1552,bBoost:1777,bus:"128-bit",tdp:130,year:2022,ludashi:340000,timespy:6200,uPrice:350,value:5},
+  {id:"rtx3060",name:"RTX 3060 12G",brand:"NVIDIA",type:"desktop",vram:"12GB GDDR6",arch:"Ampere",cores:3584,bClock:1320,bBoost:1777,bus:"192-bit",tdp:170,year:2021,ludashi:400000,timespy:8800,uPrice:450,value:5},
+  {id:"rtx3060ti",name:"RTX 3060 Ti 8G",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR6X",arch:"Ampere",cores:4864,bClock:1410,bBoost:1665,bus:"256-bit",tdp:200,year:2020,ludashi:470000,timespy:11800,uPrice:550,value:5},
+  {id:"rtx3070",name:"RTX 3070 8G",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR6",arch:"Ampere",cores:5888,bClock:1500,bBoost:1725,bus:"256-bit",tdp:220,year:2020,ludashi:550000,timespy:13800,uPrice:650,value:5},
+  {id:"rtx3080",name:"RTX 3080 10G",brand:"NVIDIA",type:"desktop",vram:"10GB GDDR6X",arch:"Ampere",cores:8704,bClock:1440,bBoost:1710,bus:"320-bit",tdp:320,year:2020,ludashi:720000,timespy:18000,uPrice:900,value:5},
+  {id:"rtx3090",name:"RTX 3090 24G",brand:"NVIDIA",type:"desktop",vram:"24GB GDDR6X",arch:"Ampere",cores:10496,bClock:1400,bBoost:1700,bus:"384-bit",tdp:350,year:2020,ludashi:880000,timespy:22000,uPrice:1500,value:4},
+
+  // === NVIDIA RTX 40 ===
+  {id:"rtx4060",name:"RTX 4060 8G",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR6",arch:"Ada Lovelace",cores:3072,bClock:1830,bBoost:2460,bus:"128-bit",tdp:115,year:2023,ludashi:460000,timespy:11000,uPrice:700,value:4},
+  {id:"rtx4060ti",name:"RTX 4060 Ti 8G",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR6",arch:"Ada Lovelace",cores:4352,bClock:2310,bBoost:2535,bus:"128-bit",tdp:160,year:2023,ludashi:520000,timespy:13500,uPrice:900,value:4},
+  {id:"rtx4070",name:"RTX 4070 12G",brand:"NVIDIA",type:"desktop",vram:"12GB GDDR6X",arch:"Ada Lovelace",cores:5888,bClock:1920,bBoost:2475,bus:"192-bit",tdp:200,year:2023,ludashi:650000,timespy:17800,uPrice:1200,value:4},
+  {id:"rtx4070ti",name:"RTX 4070 Ti 12G",brand:"NVIDIA",type:"desktop",vram:"12GB GDDR6X",arch:"Ada Lovelace",cores:7680,bClock:2310,bBoost:2610,bus:"192-bit",tdp:285,year:2023,ludashi:780000,timespy:21000,uPrice:1600,value:4},
+  {id:"rtx4080",name:"RTX 4080 16G",brand:"NVIDIA",type:"desktop",vram:"16GB GDDR6X",arch:"Ada Lovelace",cores:9728,bClock:2205,bBoost:2505,bus:"256-bit",tdp:320,year:2022,ludashi:950000,timespy:26000,uPrice:2200,value:3},
+  {id:"rtx4090",name:"RTX 4090 24G",brand:"NVIDIA",type:"desktop",vram:"24GB GDDR6X",arch:"Ada Lovelace",cores:16384,bClock:2235,bBoost:2520,bus:"384-bit",tdp:450,year:2022,ludashi:1200000,timespy:36000,uPrice:4500,value:3},
+
+  // === NVIDIA RTX 50 ===
+  {id:"rtx5080",name:"RTX 5080 16G",brand:"NVIDIA",type:"desktop",vram:"16GB GDDR7",arch:"Blackwell",cores:10752,bClock:2295,bBoost:2617,bus:"256-bit",tdp:360,year:2025,ludashi:1100000,timespy:30000,uPrice:2800,value:4},
+  {id:"rtx5090",name:"RTX 5090 32G",brand:"NVIDIA",type:"desktop",vram:"32GB GDDR7",arch:"Blackwell",cores:21760,bClock:2017,bBoost:2407,bus:"512-bit",tdp:575,year:2025,ludashi:1450000,timespy:42000,uPrice:6500,value:3},
+
+  // === AMD HD 7000 - RX 500 ===
+  {id:"hd7850",name:"HD 7850 2G",brand:"AMD",type:"desktop",vram:"2GB GDDR5",arch:"GCN 1.0",cores:1024,bClock:860,bBoost:null,bus:"256-bit",tdp:130,year:2012,ludashi:90000,timespy:null,uPrice:60,value:6},
+  {id:"r9-380",name:"R9 380 4G",brand:"AMD",type:"desktop",vram:"4GB GDDR5",arch:"GCN 3.0",cores:1792,bClock:970,bBoost:null,bus:"256-bit",tdp:190,year:2015,ludashi:150000,timespy:2200,uPrice:120,value:6},
+  {id:"rx580-2048sp",name:"RX 580 2048SP 8G",brand:"AMD",type:"desktop",vram:"8GB GDDR5",arch:"GCN 4.0",cores:2048,bClock:1168,bBoost:1284,bus:"256-bit",tdp:150,year:2018,ludashi:180000,timespy:3800,uPrice:130,value:7},
+  {id:"rx580",name:"RX 580 8G",brand:"AMD",type:"desktop",vram:"8GB GDDR5",arch:"GCN 4.0",cores:2304,bClock:1257,bBoost:1340,bus:"256-bit",tdp:185,year:2017,ludashi:200000,timespy:4300,uPrice:160,value:7},
+
+  // === AMD RX 5000 ===
+  {id:"rx5600xt",name:"RX 5600 XT 6G",brand:"AMD",type:"desktop",vram:"6GB GDDR6",arch:"RDNA",cores:2304,bClock:1130,bBoost:1560,bus:"192-bit",tdp:150,year:2020,ludashi:300000,timespy:7500,uPrice:250,value:6},
+  {id:"rx5700xt",name:"RX 5700 XT 8G",brand:"AMD",type:"desktop",vram:"8GB GDDR6",arch:"RDNA",cores:2560,bClock:1605,bBoost:1905,bus:"256-bit",tdp:225,year:2019,ludashi:360000,timespy:9200,uPrice:320,value:6},
+
+  // === AMD RX 6000 ===
+  {id:"rx6600",name:"RX 6600 8G",brand:"AMD",type:"desktop",vram:"8GB GDDR6",arch:"RDNA 2",cores:1792,bClock:2044,bBoost:2491,bus:"128-bit",tdp:132,year:2021,ludashi:370000,timespy:8200,uPrice:400,value:5},
+  {id:"rx6600xt",name:"RX 6600 XT 8G",brand:"AMD",type:"desktop",vram:"8GB GDDR6",arch:"RDNA 2",cores:2048,bClock:1968,bBoost:2589,bus:"128-bit",tdp:160,year:2021,ludashi:420000,timespy:9700,uPrice:480,value:5},
+  {id:"rx6700xt",name:"RX 6700 XT 12G",brand:"AMD",type:"desktop",vram:"12GB GDDR6",arch:"RDNA 2",cores:2560,bClock:2321,bBoost:2581,bus:"192-bit",tdp:230,year:2021,ludashi:500000,timespy:12500,uPrice:600,value:5},
+  {id:"rx6800xt",name:"RX 6800 XT 16G",brand:"AMD",type:"desktop",vram:"16GB GDDR6",arch:"RDNA 2",cores:4608,bClock:1825,bBoost:2250,bus:"256-bit",tdp:300,year:2020,ludashi:700000,timespy:18500,uPrice:900,value:5},
+  {id:"rx6900xt",name:"RX 6900 XT 16G",brand:"AMD",type:"desktop",vram:"16GB GDDR6",arch:"RDNA 2",cores:5120,bClock:1825,bBoost:2250,bus:"256-bit",tdp:300,year:2020,ludashi:800000,timespy:21000,uPrice:1200,value:4},
+
+  // === AMD RX 7000 ===
+  {id:"rx7600",name:"RX 7600 8G",brand:"AMD",type:"desktop",vram:"8GB GDDR6",arch:"RDNA 3",cores:2048,bClock:1720,bBoost:2655,bus:"128-bit",tdp:165,year:2023,ludashi:420000,timespy:10500,uPrice:650,value:4},
+  {id:"rx7700xt",name:"RX 7700 XT 12G",brand:"AMD",type:"desktop",vram:"12GB GDDR6",arch:"RDNA 3",cores:3456,bClock:1900,bBoost:2544,bus:"192-bit",tdp:245,year:2023,ludashi:550000,timespy:15500,uPrice:900,value:4},
+  {id:"rx7800xt",name:"RX 7800 XT 16G",brand:"AMD",type:"desktop",vram:"16GB GDDR6",arch:"RDNA 3",cores:3840,bClock:1295,bBoost:2430,bus:"256-bit",tdp:263,year:2023,ludashi:650000,timespy:19000,uPrice:1100,value:4},
+  {id:"rx7900xt",name:"RX 7900 XT 20G",brand:"AMD",type:"desktop",vram:"20GB GDDR6",arch:"RDNA 3",cores:5376,bClock:1500,bBoost:2394,bus:"320-bit",tdp:300,year:2022,ludashi:850000,timespy:26000,uPrice:1800,value:4},
+  {id:"rx7900xtx",name:"RX 7900 XTX 24G",brand:"AMD",type:"desktop",vram:"24GB GDDR6",arch:"RDNA 3",cores:6144,bClock:1855,bBoost:2499,bus:"384-bit",tdp:355,year:2022,ludashi:1000000,timespy:31000,uPrice:2200,value:4},
+
+  // === Intel Arc ===
+  {id:"a770",name:"Arc A770 16G",brand:"Intel Arc",type:"desktop",vram:"16GB GDDR6",arch:"Alchemist",cores:4096,bClock:2100,bBoost:2400,bus:"256-bit",tdp:225,year:2022,ludashi:480000,timespy:13000,uPrice:600,value:5},
+
+  // === Laptop GPUs ===
+  {id:"rtx3050m",name:"RTX 3050 Laptop 4G",brand:"NVIDIA",type:"laptop",vram:"4GB GDDR6",arch:"Ampere",cores:2048,bClock:1237,bBoost:1500,bus:"128-bit",tdp:60,year:2021,ludashi:250000,timespy:5000,uPrice:null,value:4},
+  {id:"rtx3060m",name:"RTX 3060 Laptop 6G",brand:"NVIDIA",type:"laptop",vram:"6GB GDDR6",arch:"Ampere",cores:3840,bClock:900,bBoost:1425,bus:"192-bit",tdp:85,year:2021,ludashi:320000,timespy:7500,uPrice:null,value:5},
+  {id:"rtx4060m",name:"RTX 4060 Laptop 8G",brand:"NVIDIA",type:"laptop",vram:"8GB GDDR6",arch:"Ada Lovelace",cores:3072,bClock:1470,bBoost:2370,bus:"128-bit",tdp:80,year:2023,ludashi:380000,timespy:9500,uPrice:null,value:5},
+  {id:"rtx4070m",name:"RTX 4070 Laptop 8G",brand:"NVIDIA",type:"laptop",vram:"8GB GDDR6",arch:"Ada Lovelace",cores:4608,bClock:1230,bBoost:2175,bus:"128-bit",tdp:100,year:2023,ludashi:480000,timespy:12500,uPrice:null,value:5},
+  {id:"rtx5070tim",name:"RTX 5070 Ti Laptop 12G",brand:"NVIDIA",type:"laptop",vram:"12GB GDDR7",arch:"Blackwell",cores:6400,bClock:2310,bBoost:2520,bus:"192-bit",tdp:140,year:2025,ludashi:720000,timespy:19000,uPrice:null,value:5},
+];
+
+// ================================
+// APP STATE
+// ================================
+let currentTab = 'cpu';
+let currentScore = 'ludashi';
+let selectedItem = null;
+let compareSlots = [null, null, null, null];
+
+// ================================
+// HELPERS
+// ================================
+function getData() { return currentTab === 'cpu' ? CPU_DATA : GPU_DATA; }
+function getScore(item) { return currentScore === 'ludashi' ? item.ludashi : item.timespy; }
+function fmtScore(v) {
+  if (!v) return 'N/A';
+  if (currentScore === 'ludashi') return (v/10000).toFixed(1) + '万';
+  return v.toLocaleString();
+}
+function fmtScoreRaw(v) { return v ? v.toLocaleString() : 'N/A'; }
+
+function getPlatforms() {
+  const data = getData();
+  const platforms = [...new Set(data.map(d => d.platform))].sort();
+  return platforms;
+}
+
+function getBarClass(item) {
+  if (item.brand === 'Intel') return 'intel';
+  if (item.brand === 'AMD') return 'amd';
+  if (item.brand === 'NVIDIA') return 'nvidia';
+  if (item.brand === 'Intel Arc') return 'intel';
+  return '';
+}
+
+function getTag(item) {
+  if (item.type === 'laptop') return '<span class="tag tag-laptop">笔记本</span>';
+  if (item.type === 'server') return '<span class="tag tag-server">服务器</span>';
+  return '';
+}
+
+function getStars(v) {
+  if (!v || v === 0) return '';
+  let s = '';
+  for (let i = 0; i < Math.round(v); i++) s += '★';
+  for (let i = Math.round(v); i < 10; i++) s += '☆';
+  return s;
+}
+
+// ================================
+// RENDER
+// ================================
+function getFilteredData() {
+  const data = getData();
+  const search = document.getElementById('searchBox').value.toLowerCase().trim();
+  const platform = document.getElementById('filterPlatform').value;
+  const brand = document.getElementById('filterBrand').value;
+  const type = document.getElementById('filterType').value;
+  const minValue = parseInt(document.getElementById('filterValue').value);
+
+  let filtered = data.filter(item => {
+    if (search && !item.name.toLowerCase().includes(search)) return false;
+    if (platform !== 'all' && item.platform !== platform) return false;
+    if (brand !== 'all' && item.brand !== brand) return false;
+    if (type !== 'all' && item.type !== type) return false;
+    if (minValue > 0 && (item.value || 0) < minValue) return false;
+    return true;
+  });
+
+  // Sort by current score descending
+  filtered.sort((a, b) => {
+    const sa = getScore(a) || 0;
+    const sb = getScore(b) || 0;
+    return sb - sa;
+  });
+
+  return filtered;
+}
+
+function renderBars() {
+  const filtered = getFilteredData();
+  const maxScore = filtered.length > 0 ? Math.max(...filtered.map(d => getScore(d) || 0)) : 1;
+
+  document.getElementById('resultCount').textContent = `共 ${filtered.length} 个型号`;
+  document.getElementById('chartHeader').querySelector('span:last-child').textContent =
+    currentScore === 'ludashi' ? '按新版鲁大师跑分降序' : '按 Time Spy 跑分降序';
+
+  const barList = document.getElementById('barList');
+
+  if (filtered.length === 0) {
+    barList.innerHTML = '<div style="text-align:center;color:var(--text2);padding:40px;">没有匹配的硬件，换一个筛选条件试试</div>';
+    return;
+  }
+
+  barList.innerHTML = filtered.map((item, i) => {
+    const score = getScore(item) || 0;
+    const width = (score / maxScore * 100).toFixed(1);
+    const cls = getBarClass(item);
+    const tag = getTag(item);
+    const stars = getStars(item.value);
+    const price = item.uPrice ? '¥' + item.uPrice : '新品';
+
+    return `
+    <div class="bar-row" data-id="${item.id}" data-tab="${currentTab}" onclick="selectItem('${item.id}')" oncontextmenu="event.preventDefault();toggleCompare('${item.id}')">
+      <span class="bar-rank">${i + 1}</span>
+      <span class="bar-name">${item.name}${tag}</span>
+      <div class="bar-bg"><div class="bar-fill ${cls}" style="width:${width}%"></div></div>
+      <span class="bar-score">${fmtScore(score)}</span>
+      <div class="bar-value">
+        <span class="value-stars">${stars}</span>
+        <span class="value-price">${price}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('resultCount').textContent = `共 ${filtered.length} 个型号`;
+}
+
+function selectItem(id) {
+  const data = getData();
+  const item = data.find(d => d.id === id);
+  if (!item) return;
+
+  selectedItem = item;
+  selectedItem._tab = currentTab;
+
+  // Highlight
+  document.querySelectorAll('.bar-row').forEach(el => el.classList.remove('selected'));
+  const row = document.querySelector(`[data-id="${id}"]`);
+  if (row) row.classList.add('selected');
+
+  renderDetail(item);
+}
+
+function renderDetail(item) {
+  const panel = document.getElementById('detailPanel');
+  const score = getScore(item);
+  const stars = getStars(item.value);
+  const isCpu = currentTab === 'cpu';
+
+  let specGrid = '';
+  if (isCpu) {
+    specGrid = `
+    <div class="detail-item"><div class="label">核心/线程</div><div class="val">${item.cores}C/${item.threads}T</div></div>
+    <div class="detail-item"><div class="label">基础频率</div><div class="val">${item.bClock} GHz</div></div>
+    <div class="detail-item"><div class="label">最大睿频</div><div class="val">${item.bBoost || 'N/A'}${item.bBoost?' GHz':''}</div></div>
+    <div class="detail-item"><div class="label">缓存</div><div class="val">${item.cache}</div></div>
+    <div class="detail-item"><div class="label">TDP</div><div class="val">${item.tdp}W</div></div>
+    <div class="detail-item"><div class="label">内存</div><div class="val">${item.ram}</div></div>
+    <div class="detail-item"><div class="label">平台</div><div class="val">${item.platform}</div></div>
+    <div class="detail-item"><div class="label">代际</div><div class="val">${item.gen}</div></div>
+    `;
+  } else {
+    specGrid = `
+    <div class="detail-item"><div class="label">显存</div><div class="val">${item.vram}</div></div>
+    <div class="detail-item"><div class="label">架构</div><div class="val">${item.arch}</div></div>
+    <div class="detail-item"><div class="label">流处理器</div><div class="val">${item.cores.toLocaleString()}</div></div>
+    <div class="detail-item"><div class="label">基础频率</div><div class="val">${item.bClock} MHz</div></div>
+    <div class="detail-item"><div class="label">加速频率</div><div class="val">${item.bBoost || 'N/A'}${item.bBoost?' MHz':''}</div></div>
+    <div class="detail-item"><div class="label">位宽</div><div class="val">${item.bus}</div></div>
+    <div class="detail-item"><div class="label">TDP</div><div class="val">${item.tdp}W</div></div>
+    <div class="detail-item"><div class="label">发售年</div><div class="val">${item.year}</div></div>
+    `;
+  }
+
+  panel.innerHTML = `
+  <h3>${item.name}</h3>
+  <div class="subtitle">${item.brand} · ${item.type==='server'?'服务器':item.type==='laptop'?'笔记本':'桌面'} · ${isCpu ? item.platform : item.arch}</div>
+
+  <div class="detail-scores">
+    <div class="score-card">
+      <div class="sc">${fmtScore(item.ludashi)}</div>
+      <div class="scl">鲁大师 (新版)</div>
+    </div>
+    <div class="score-card">
+      <div class="sc">${item.timespy ? item.timespy.toLocaleString() : 'N/A'}</div>
+      <div class="scl">Time Spy ${isCpu ? 'CPU' : 'Graphics'}</div>
+    </div>
+  </div>
+
+  <div class="detail-scores">
+    <div class="score-card">
+      <div class="scl2">${stars}</div>
+      <div class="scl">性价比</div>
+    </div>
+    <div class="score-card">
+      <div class="scl2">${item.uPrice ? '¥' + item.uPrice : '新品'}</div>
+      <div class="scl">参考二手价</div>
+    </div>
+  </div>
+
+  <div class="detail-grid">${specGrid}</div>
+
+  <button onclick="toggleCompare('${item.id}')" style="width:100%;padding:10px;margin-top:8px;border-radius:6px;border:1px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer;font-size:13px;font-weight:600;">
+    ${compareSlots.includes(item.id) ? '✓ 已加入对比栏 (点击移除)' : '+ 加入对比栏'}
+  </button>
+  `;
+}
+
+// ================================
+// COMPARE
+// ================================
+function toggleCompare(id) {
+  const data = getData();
+  const item = data.find(d => d.id === id);
+  if (!item) return;
+
+  const idx = compareSlots.indexOf(id);
+  if (idx >= 0) {
+    compareSlots[idx] = null;
+  } else {
+    const emptyIdx = compareSlots.indexOf(null);
+    if (emptyIdx >= 0) {
+      compareSlots[emptyIdx] = id;
+    } else {
+      alert('对比栏已满（最多4个），请先移除一个');
+      return;
+    }
+  }
+  renderCompareBar();
+  renderBars();
+  if (selectedItem && selectedItem.id === id) renderDetail(selectedItem);
+}
+
+function renderCompareBar() {
+  const slots = document.querySelectorAll('.compare-slot');
+  slots.forEach((slot, i) => {
+    const id = compareSlots[i];
+    if (id) {
+      // Find in both datasets
+      let item = CPU_DATA.find(d => d.id === id) || GPU_DATA.find(d => d.id === id);
+      if (item) {
+        slot.textContent = item.name;
+        slot.classList.add('filled');
+      }
+    } else {
+      slot.textContent = '点击硬件加入对比';
+      slot.classList.remove('filled');
+    }
+  });
+
+  const filledCount = compareSlots.filter(s => s !== null).length;
+  document.getElementById('compareBtn').disabled = filledCount < 2;
+}
+
+function openCompare() {
+  const filled = compareSlots.filter(s => s !== null);
+  if (filled.length < 2) return;
+
+  const allData = [...CPU_DATA, ...GPU_DATA];
+  const items = filled.map(id => allData.find(d => d.id === id)).filter(Boolean);
+  const isCpu = items.every(i => 'cores' in i);
+
+  let html = '<h2>硬件对比</h2><table><thead><tr><th>参数</th>';
+  items.forEach(i => { html += `<th>${i.name}</th>`; });
+  html += '</tr></thead><tbody>';
+
+  // Score rows
+  html += '<tr><td>鲁大师 (新版)</td>';
+  const luScores = items.map(i => i.ludashi || 0);
+  const luMax = Math.max(...luScores);
+  items.forEach((i, idx) => { html += `<td class="${i.ludashi===luMax?'best':''}">${fmtScore(i.ludashi)}</td>`; });
+  html += '</tr>';
+
+  html += '<tr><td>Time Spy</td>';
+  const tsScores = items.map(i => i.timespy || 0);
+  const tsMax = Math.max(...tsScores);
+  items.forEach((i, idx) => { html += `<td class="${i.timespy===tsMax?'best':''}">${i.timespy?i.timespy.toLocaleString():'N/A'}</td>`; });
+  html += '</tr>';
+
+  html += '<tr><td>性价比</td>';
+  items.forEach(i => { html += `<td>${getStars(i.value)}</td>`; });
+  html += '</tr>';
+
+  html += '<tr><td>参考二手价</td>';
+  items.forEach(i => { html += `<td>${i.uPrice?'¥'+i.uPrice:'新品'}</td>`; });
+  html += '</tr>';
+
+  if (isCpu) {
+    html += '<tr><td>核心/线程</td>';
+    items.forEach(i => { html += `<td>${i.cores}C/${i.threads}T</td>`; });
+    html += '</tr><tr><td>基础频率</td>';
+    items.forEach(i => { html += `<td>${i.bClock} GHz</td>`; });
+    html += '</tr><tr><td>最大睿频</td>';
+    items.forEach(i => { html += `<td>${i.bBoost?i.bBoost+' GHz':'N/A'}</td>`; });
+    html += '</tr><tr><td>缓存</td>';
+    items.forEach(i => { html += `<td>${i.cache}</td>`; });
+    html += '</tr><tr><td>TDP</td>';
+    items.forEach(i => { html += `<td>${i.tdp}W</td>`; });
+    html += '</tr><tr><td>平台</td>';
+    items.forEach(i => { html += `<td>${i.platform}</td>`; });
+    html += '</tr><tr><td>代际</td>';
+    items.forEach(i => { html += `<td>${i.gen}</td>`; });
+    html += '</tr><tr><td>内存</td>';
+    items.forEach(i => { html += `<td>${i.ram}</td>`; });
+    html += '</tr>';
+  } else {
+    html += '<tr><td>显存</td>';
+    items.forEach(i => { html += `<td>${i.vram}</td>`; });
+    html += '</tr><tr><td>架构</td>';
+    items.forEach(i => { html += `<td>${i.arch}</td>`; });
+    html += '</tr><tr><td>流处理器</td>';
+    items.forEach(i => { html += `<td>${i.cores.toLocaleString()}</td>`; });
+    html += '</tr><tr><td>频率</td>';
+    items.forEach(i => { html += `<td>${i.bClock}${i.bBoost?'/'+i.bBoost:''} MHz</td>`; });
+    html += '</tr><tr><td>位宽</td>';
+    items.forEach(i => { html += `<td>${i.bus}</td>`; });
+    html += '</tr><tr><td>TDP</td>';
+    items.forEach(i => { html += `<td>${i.tdp}W</td>`; });
+    html += '</tr>';
+  }
+
+  html += '</tbody></table>';
+  document.getElementById('compareContent').innerHTML = html;
+  document.getElementById('compareModal').style.display = 'flex';
+}
+
+function clearCompare() {
+  compareSlots = [null, null, null, null];
+  renderCompareBar();
+  renderBars();
+}
+
+// ================================
+// INIT
+// ================================
+function initPlatforms() {
+  const sel = document.getElementById('filterPlatform');
+  const platforms = getPlatforms();
+  sel.innerHTML = '<option value="all">全部</option>' +
+    platforms.map(p => `<option value="${p}">${p}</option>`).join('');
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  initPlatforms();
+  renderBars();
+  selectedItem = null;
+  document.getElementById('detailPanel').innerHTML =
+    '<div style="text-align:center;color:var(--text2);margin-top:80px;font-size:13px;">← 点击左侧硬件查看详情<br><br>可多选加入底部对比栏</div>';
+
+  // Update brand filter for GPU
+  const brandSel = document.getElementById('filterBrand');
+  if (tab === 'cpu') {
+    brandSel.innerHTML = '<option value="all">全部</option><option value="Intel">Intel</option><option value="AMD">AMD</option>';
+    document.getElementById('filterType').innerHTML = '<option value="all">全部</option><option value="desktop">桌面</option><option value="laptop">笔记本</option><option value="server">服务器</option>';
+  } else {
+    brandSel.innerHTML = '<option value="all">全部</option><option value="NVIDIA">NVIDIA</option><option value="AMD">AMD</option><option value="Intel Arc">Intel Arc</option>';
+    document.getElementById('filterType').innerHTML = '<option value="all">全部</option><option value="desktop">桌面</option><option value="laptop">笔记本</option>';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initPlatforms();
+
+  // Tab switching
+  document.querySelectorAll('#tabGroup .tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#tabGroup .tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      switchTab(btn.dataset.tab);
+    });
+  });
+
+  // Score toggle
+  document.querySelectorAll('#scoreToggle .score-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#scoreToggle .score-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentScore = btn.dataset.score;
+      renderBars();
+      if (selectedItem) {
+        const data = getData();
+        const item = data.find(d => d.id === selectedItem.id);
+        if (item) renderDetail(item);
+        else { selectedItem = null; document.getElementById('detailPanel').innerHTML = '<div style="text-align:center;color:var(--text2);margin-top:80px;">请重新选择</div>'; }
+      }
+    });
+  });
+
+  // Search
+  document.getElementById('searchBox').addEventListener('input', renderBars);
+
+  // Filters
+  document.getElementById('filterPlatform').addEventListener('change', renderBars);
+  document.getElementById('filterBrand').addEventListener('change', renderBars);
+  document.getElementById('filterType').addEventListener('change', renderBars);
+  document.getElementById('filterValue').addEventListener('change', renderBars);
+
+  // Compare
+  document.getElementById('compareBtn').addEventListener('click', openCompare);
+  document.getElementById('compareClear').addEventListener('click', clearCompare);
+  document.getElementById('compareModal').addEventListener('click', function(e) {
+    if (e.target === this) this.style.display = 'none';
+  });
+  document.querySelectorAll('.compare-slot').forEach((slot, i) => {
+    slot.addEventListener('click', () => {
+      if (compareSlots[i]) {
+        compareSlots[i] = null;
+        renderCompareBar();
+        renderBars();
+      }
+    });
+  });
+
+  // Initial render
+  renderBars();
+});
+</script>
+</body>
+</html>
