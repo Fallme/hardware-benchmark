@@ -288,7 +288,7 @@ body {
 
 <script>
 // ====================================================================
-// DATA - CPUs (90 models)
+// DATA - CPUs (234 models)
 // ====================================================================
 const CPU_DATA = [
   // === LGA 1155 ===
@@ -482,7 +482,6 @@ const CPU_DATA = [
 
 
   // -- Intel 8/9代 无K/T系列 (补充) --
-  {id:"i5-8400",name:"i5-8400",brand:"Intel",type:"desktop",platform:"LGA1151",gen:"Coffee Lake",cores:6,threads:6,bClock:2.8,bBoost:4.0,cache:"9MB",tdp:65,ram:"DDR4 2666",year:2018,ludashi:300000,timespy:8200,r23:5900,launchPrice:1499,retailPrice:200,value:7},
   {id:"i5-8600k",name:"i5-8600K",brand:"Intel",type:"desktop",platform:"LGA1151",gen:"Coffee Lake",cores:6,threads:6,bClock:3.6,bBoost:4.3,cache:"9MB",tdp:95,ram:"DDR4 2666",year:2018,ludashi:350000,timespy:9500,r23:6800,launchPrice:1799,retailPrice:250,value:6},
   {id:"i7-8700",name:"i7-8700",brand:"Intel",type:"desktop",platform:"LGA1151",gen:"Coffee Lake",cores:6,threads:12,bClock:3.2,bBoost:4.6,cache:"12MB",tdp:65,ram:"DDR4 2666",year:2018,ludashi:380000,timespy:10000,r23:9000,launchPrice:2399,retailPrice:300,value:6},
   {id:"i7-8700t",name:"i7-8700T",brand:"Intel",type:"desktop",platform:"LGA1151",gen:"Coffee Lake",cores:6,threads:12,bClock:2.4,bBoost:4.0,cache:"12MB",tdp:35,ram:"DDR4 2666",year:2018,ludashi:300000,timespy:7800,r23:7200,launchPrice:2399,retailPrice:220,value:7},
@@ -520,7 +519,6 @@ const CPU_DATA = [
   {id:"i5-14500",name:"i5-14500",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:14,threads:20,bClock:2.6,bBoost:5.0,cache:"24MB",tdp:65,ram:"DDR5 5600",year:2024,ludashi:650000,timespy:18000,r23:20500,launchPrice:1999,retailPrice:500,value:6},
   {id:"i5-14600k",name:"i5-14600K",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:14,threads:20,bClock:3.5,bBoost:5.3,cache:"24MB",tdp:125,ram:"DDR5 5600",year:2023,ludashi:780000,timespy:22500,r23:25000,launchPrice:2499,retailPrice:600,value:6},
   {id:"i7-14700",name:"i7-14700",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:20,threads:28,bClock:2.1,bBoost:5.4,cache:"33MB",tdp:65,ram:"DDR5 5600",year:2024,ludashi:950000,timespy:28000,r23:32000,launchPrice:3099,retailPrice:750,value:5},
-  {id:"i7-14700k",name:"i7-14700K",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:20,threads:28,bClock:3.4,bBoost:5.6,cache:"33MB",tdp:125,ram:"DDR5 5600",year:2023,ludashi:1000000,timespy:30000,r23:34000,launchPrice:3399,retailPrice:850,value:5},
   {id:"i9-14900",name:"i9-14900",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:24,threads:32,bClock:2.0,bBoost:5.8,cache:"36MB",tdp:65,ram:"DDR5 5600",year:2024,ludashi:1100000,timespy:33000,r23:36000,launchPrice:4599,retailPrice:950,value:5},
   {id:"i9-14900kf",name:"i9-14900KF",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:24,threads:32,bClock:3.2,bBoost:6.0,cache:"36MB",tdp:125,ram:"DDR5 5600",year:2023,ludashi:1180000,timespy:35000,r23:37800,launchPrice:4599,retailPrice:900,value:4},
   {id:"i9-14900t",name:"i9-14900T",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:24,threads:32,bClock:1.5,bBoost:5.1,cache:"36MB",tdp:35,ram:"DDR5 5600",year:2024,ludashi:850000,timespy:24000,r23:27000,launchPrice:4599,retailPrice:700,value:5},
@@ -625,7 +623,7 @@ const CPU_DATA = [
 ];
 
 // ====================================================================
-// DATA - GPUs (140 models)
+// DATA - GPUs (148 models)
 // ====================================================================
 const GPU_DATA = [
   // === NVIDIA older ===
@@ -844,6 +842,22 @@ const GPU_DATA = [
   // ====================================================================
   {id:"intel-gaudi2",name:"Gaudi 2 96G 🧠",brand:"Intel",type:"desktop",vram:"96GB HBM2e",arch:"Gaudi 2",cores:0,bClock:null,bBoost:null,bus:"—",tdp:600,year:2022,ludashi:null,timespy:null,launchPrice:null,retailPrice:null,value:2,tags:"AI加速卡"},
   {id:"intel-datacenter-max1100",name:"Data Center Max 1100 🧠",brand:"Intel",type:"desktop",vram:"48GB HBM2e",arch:"Ponte Vecchio",cores:7168,bClock:1550,bBoost:null,bus:"—",tdp:300,year:2023,ludashi:null,timespy:null,launchPrice:null,retailPrice:null,value:2,tags:"AI加速卡"},
+
+
+
+  // === 🔥 解锁功耗/超频特例 (笔记本) ===
+  {id:"rtx5090m-175w",name:"RTX 5090M 175W 🔥",brand:"NVIDIA",type:"laptop",vram:"24GB GDDR7",arch:"Blackwell",cores:10496,bClock:2000,bBoost:2400,bus:"256-bit",tdp:175,year:2025,ludashi:1050000,timespy:27500,launchPrice:null,retailPrice:null,value:3,tags:"vbios解锁175W"},
+  {id:"rtx4090m-175w",name:"RTX 4090M 175W 🔥",brand:"NVIDIA",type:"laptop",vram:"16GB GDDR6",arch:"Ada Lovelace",cores:9728,bClock:1640,bBoost:2250,bus:"256-bit",tdp:175,year:2023,ludashi:950000,timespy:23500,launchPrice:null,retailPrice:null,value:3,tags:"vbios解锁175W"},
+  {id:"rtx4080m-175w",name:"RTX 4080M 175W 🔥",brand:"NVIDIA",type:"laptop",vram:"12GB GDDR6",arch:"Ada Lovelace",cores:7424,bClock:1530,bBoost:2500,bus:"192-bit",tdp:175,year:2023,ludashi:810000,timespy:20000,launchPrice:null,retailPrice:null,value:4,tags:"vbios解锁175W"},
+  {id:"rtx3080m-165w",name:"RTX 3080M 165W 🔥",brand:"NVIDIA",type:"laptop",vram:"8GB GDDR6",arch:"Ampere",cores:6144,bClock:1350,bBoost:1860,bus:"256-bit",tdp:165,year:2021,ludashi:620000,timespy:13500,launchPrice:null,retailPrice:null,value:5,tags:"vbios解锁165W"},
+  {id:"rtx3070m-140w",name:"RTX 3070M 140W 🔥",brand:"NVIDIA",type:"laptop",vram:"8GB GDDR6",arch:"Ampere",cores:5120,bClock:1380,bBoost:1800,bus:"256-bit",tdp:140,year:2021,ludashi:510000,timespy:11200,launchPrice:null,retailPrice:null,value:5,tags:"vbios解锁140W"},
+
+  // === 🔥 解锁功耗特例 (桌面) ===
+  {id:"rtx4090-600w",name:"RTX 4090 @600W 🔥",brand:"NVIDIA",type:"desktop",vram:"24GB GDDR6X",arch:"Ada Lovelace",cores:16384,bClock:2520,bBoost:3000,bus:"384-bit",tdp:600,year:2022,ludashi:1450000,timespy:39000,launchPrice:12999,retailPrice:12000,value:1,tags:"解锁600W功耗墙"},
+  {id:"rtx3080-450w",name:"RTX 3080 @450W 🔥",brand:"NVIDIA",type:"desktop",vram:"10GB GDDR6X",arch:"Ampere",cores:8704,bClock:1710,bBoost:2050,bus:"320-bit",tdp:450,year:2020,ludashi:950000,timespy:19000,launchPrice:5499,retailPrice:2000,value:4,tags:"解锁450W功耗墙"},
+  {id:"rx7900xtx-550w",name:"RX 7900 XTX @550W 🔥",brand:"AMD",type:"desktop",vram:"24GB GDDR6",arch:"RDNA 3",cores:6144,bClock:2000,bBoost:2850,bus:"384-bit",tdp:550,year:2022,ludashi:1150000,timespy:35000,launchPrice:7999,retailPrice:3000,value:4,tags:"解锁550W功耗墙"},
+
+  // === 🔥 解锁功耗特例 (笔记本已存在补充) ===
 
 ];
 
