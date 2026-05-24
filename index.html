@@ -853,7 +853,7 @@ function renderDetail(item){
   }
 
   panel.innerHTML=`
-  <h3>${item.tags?` 🔥 <span style="font-size:10px;color:var(--accent);">${item.tags}</span>`:}${item.name} <span style="font-size:10px;color:var(--text3);">${item.type==='server'?'服务器':item.type==='laptop'?'笔记本':'桌面'}</span></h3>
+  <h3>${item.tags?` 🔥 <span style="font-size:10px;color:var(--accent);">${item.tags}</span>`:''}${item.name} <span style="font-size:10px;color:var(--text3);">${item.type==='server'?'服务器':item.type==='laptop'?'笔记本':'桌面'}</span></h3>
   <div class="subtitle">${item.brand} · ${isCpu?item.gen:item.arch} · ${isCpu?item.platform:''}</div>
 
   <div class="score-grid">
