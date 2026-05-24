@@ -339,11 +339,11 @@ const CPU_DATA = [
   {id:"i5-13600kf",name:"i5-13600KF",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake",cores:14,threads:20,bClock:3.5,bBoost:5.1,cache:"24MB",tdp:125,ram:"DDR5 5600",year:2022,ludashi:750000,timespy:13000,r23:24000,launchPrice:2499,retailPrice:500,r23sc:2250,value:6},
   {id:"i5-14600kf",name:"i5-14600KF",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:14,threads:20,bClock:3.5,bBoost:5.3,cache:"24MB",tdp:125,ram:"DDR5 6000",year:2023,ludashi:800000,timespy:23500,r23:25000,launchPrice:2499,retailPrice:600,r23sc:2200,value:5},
   {id:"i7-12700k",name:"i7-12700K",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Alder Lake",cores:12,threads:20,bClock:3.6,bBoost:5.0,cache:"25MB",tdp:125,ram:"DDR5 4800",year:2021,ludashi:800000,timespy:14000,r23:22500,launchPrice:3299,retailPrice:450,r23sc:1950,value:6},
-  {id:"i7-13700k",name:"i7-13700K",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake",cores:16,threads:24,bClock:3.4,bBoost:5.4,cache:"30MB",tdp:125,ram:"DDR5 5600",year:2022,ludashi:950000,timespy:14800,r23:30000,launchPrice:3799,retailPrice:750,r23sc:2280,value:5},
-  {id:"i7-14700k",name:"i7-14700K",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:20,threads:28,bClock:3.4,bBoost:5.5,cache:"33MB",tdp:125,ram:"DDR5 6000",year:2023,ludashi:1000000,timespy:16800,r23:32000,launchPrice:3799,retailPrice:900,r23sc:2250,value:5},
+  {id:"i7-13700k",name:"i7-13700K",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake",cores:16,threads:24,bClock:3.4,bBoost:5.4,cache:"30MB",tdp:125,ram:"DDR5 5600",year:2022,ludashi:950000,timespy:14800,r23:30800,launchPrice:3799,retailPrice:750,r23sc:2280,value:5},
+  {id:"i7-14700k",name:"i7-14700K",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:20,threads:28,bClock:3.4,bBoost:5.5,cache:"33MB",tdp:125,ram:"DDR5 6000",year:2023,ludashi:1000000,timespy:16800,r23:36200,launchPrice:3799,retailPrice:900,r23sc:2250,value:5},
   {id:"i9-12900k",name:"i9-12900K",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Alder Lake",cores:16,threads:24,bClock:3.2,bBoost:5.2,cache:"30MB",tdp:125,ram:"DDR5 4800",year:2021,ludashi:880000,timespy:15500,r23:27500,launchPrice:5099,retailPrice:650,r23sc:2050,value:5},
-  {id:"i9-13900k",name:"i9-13900K",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake",cores:24,threads:32,bClock:3.0,bBoost:5.8,cache:"36MB",tdp:125,ram:"DDR5 5600",year:2022,ludashi:1150000,timespy:16500,r23:37500,launchPrice:5299,retailPrice:1100,r23sc:2300,value:4},
-  {id:"i9-14900k",name:"i9-14900K",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:24,threads:32,bClock:3.2,bBoost:6.0,cache:"36MB",tdp:125,ram:"DDR5 6000",year:2023,ludashi:1250000,timespy:17500,r23:38000,launchPrice:5299,retailPrice:1400,r23sc:2350,value:4},
+  {id:"i9-13900k",name:"i9-13900K",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake",cores:24,threads:32,bClock:3.0,bBoost:5.8,cache:"36MB",tdp:125,ram:"DDR5 5600",year:2022,ludashi:1150000,timespy:16500,r23:39700,launchPrice:5299,retailPrice:1100,r23sc:2300,value:4},
+  {id:"i9-14900k",name:"i9-14900K",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:24,threads:32,bClock:3.2,bBoost:6.0,cache:"36MB",tdp:125,ram:"DDR5 6000",year:2023,ludashi:1250000,timespy:17500,r23:38700,launchPrice:5299,retailPrice:1400,r23sc:2350,value:4},
 
   // === LGA 2011 / 2011-3 ===
   {id:"e5-2667v2",name:"E5-2667 v2",brand:"Intel",type:"server",platform:"LGA2011",gen:"Ivy Bridge-EP",cores:8,threads:16,bClock:3.3,bBoost:4.0,cache:"25MB",tdp:130,ram:"DDR3 1866",year:2013,ludashi:220000,timespy:5500,r23:6500,launchPrice:null,retailPrice:60,r23sc:800,value:8},
@@ -374,9 +374,9 @@ const CPU_DATA = [
   {id:"r5-7600x",name:"R5 7600X",brand:"AMD",type:"desktop",platform:"AM5",gen:"Zen 4",cores:6,threads:12,bClock:4.7,bBoost:5.3,cache:"38MB",tdp:105,ram:"DDR5 5200",year:2022,ludashi:650000,timespy:12000,r23:15000,launchPrice:1899,retailPrice:450,r23sc:1950,value:6},
   {id:"r7-7700x",name:"R7 7700X",brand:"AMD",type:"desktop",platform:"AM5",gen:"Zen 4",cores:8,threads:16,bClock:4.5,bBoost:5.4,cache:"32MB",tdp:105,ram:"DDR5 5200",year:2022,ludashi:750000,timespy:13100,r23:20000,launchPrice:2999,retailPrice:1200,r23sc:2000,value:7},
   {id:"r7-7800x3d",name:"R7 7800X3D",brand:"AMD",type:"desktop",platform:"AM5",gen:"Zen 4",cores:8,threads:16,bClock:4.2,bBoost:5.0,cache:"104MB",tdp:120,ram:"DDR5 5200",year:2023,ludashi:680000,timespy:13000,r23:18000,launchPrice:3299,retailPrice:900,r23sc:1900,value:5},
-  {id:"r9-7950x",name:"R9 7950X",brand:"AMD",type:"desktop",platform:"AM5",gen:"Zen 4",cores:16,threads:32,bClock:4.5,bBoost:5.7,cache:"80MB",tdp:170,ram:"DDR5 5200",year:2022,ludashi:1200000,timespy:15700,r23:38000,launchPrice:5499,retailPrice:1400,r23sc:2050,value:4},
+  {id:"r9-7950x",name:"R9 7950X",brand:"AMD",type:"desktop",platform:"AM5",gen:"Zen 4",cores:16,threads:32,bClock:4.5,bBoost:5.7,cache:"80MB",tdp:170,ram:"DDR5 5200",year:2022,ludashi:1200000,timespy:15700,r23:38600,launchPrice:5499,retailPrice:1400,r23sc:2050,value:4},
 
-  {id:"r9-7950x3d",name:"R9 7950X3D",brand:"AMD",type:"desktop",platform:"AM5",gen:"Zen 4",cores:16,threads:32,bClock:4.2,bBoost:5.7,cache:"128MB",tdp:120,ram:"DDR5 5200",year:2023,ludashi:1200000,timespy:15300,r23:36400,launchPrice:5299,retailPrice:3500,r23sc:2050,value:4},
+  {id:"r9-7950x3d",name:"R9 7950X3D",brand:"AMD",type:"desktop",platform:"AM5",gen:"Zen 4",cores:16,threads:32,bClock:4.2,bBoost:5.7,cache:"128MB",tdp:120,ram:"DDR5 5200",year:2023,ludashi:1200000,timespy:15300,r23:38600,launchPrice:5299,retailPrice:3500,r23sc:2050,value:4},
 
   {id:"r9-7900x",name:"R9 7900X",brand:"AMD",type:"desktop",platform:"AM5",gen:"Zen 4",cores:12,threads:24,bClock:4.7,bBoost:5.6,cache:"64MB",tdp:170,ram:"DDR5 5200",year:2022,ludashi:1000000,timespy:14900,r23:29800,launchPrice:4299,retailPrice:2000,r23sc:2050,value:5},  // === AMD AM5 (Zen 5) ===
   {id:"r5-9600x",name:"R5 9600X",brand:"AMD",type:"desktop",platform:"AM5",gen:"Zen 5",cores:6,threads:12,bClock:3.9,bBoost:5.4,cache:"38MB",tdp:65,ram:"DDR5 5600",year:2024,ludashi:680000,timespy:11800,r23:16500,launchPrice:1599,retailPrice:550,r23sc:2400,value:6},
@@ -483,9 +483,9 @@ const CPU_DATA = [
   {id:"ai7-350",name:"AI 7 350",brand:"AMD",type:"laptop",platform:"FP8",gen:"Zen 5 Krackan Point",cores:8,threads:16,bClock:2.5,bBoost:5.0,cache:"24MB",tdp:28,ram:"DDR5 5600",year:2025,ludashi:620000,timespy:18000,r23:15000,launchPrice:null,retailPrice:null,r23sc:1850,value:7},
 
   // -- Desktop (归类) --
-  {id:"ultra9-285k",name:"Ultra 9 285K",brand:"Intel",type:"desktop",platform:"LGA1851",gen:"Arrow Lake",cores:24,threads:24,bClock:3.7,bBoost:5.7,cache:"40MB",tdp:125,ram:"DDR5 6400",year:2024,ludashi:1300000,timespy:18100,r23:40000,launchPrice:5599,retailPrice:1800,r23sc:2250,value:4},
+  {id:"ultra9-285k",name:"Ultra 9 285K",brand:"Intel",type:"desktop",platform:"LGA1851",gen:"Arrow Lake",cores:24,threads:24,bClock:3.7,bBoost:5.7,cache:"40MB",tdp:125,ram:"DDR5 6400",year:2024,ludashi:1300000,timespy:18100,r23:42600,launchPrice:5599,retailPrice:1800,r23sc:2250,value:4},
 
-  {id:"ultra7-265k",name:"Ultra 7 265K",brand:"Intel",type:"desktop",platform:"LGA1851",gen:"Arrow Lake",cores:20,threads:20,bClock:3.9,bBoost:5.5,cache:"30MB",tdp:125,ram:"DDR5 6400",year:2024,ludashi:1100000,timespy:16500,r23:36000,launchPrice:3199,retailPrice:2500,r23sc:2114,value:5},
+  {id:"ultra7-265k",name:"Ultra 7 265K",brand:"Intel",type:"desktop",platform:"LGA1851",gen:"Arrow Lake",cores:20,threads:20,bClock:3.9,bBoost:5.5,cache:"30MB",tdp:125,ram:"DDR5 6400",year:2024,ludashi:1100000,timespy:16500,r23:35300,launchPrice:3199,retailPrice:2500,r23sc:2114,value:5},
 
   {id:"ultra5-245k",name:"Ultra 5 245K",brand:"Intel",type:"desktop",platform:"LGA1851",gen:"Arrow Lake",cores:14,threads:14,bClock:4.2,bBoost:5.2,cache:"24MB",tdp:125,ram:"DDR5 6400",year:2024,ludashi:850000,timespy:13000,r23:25500,launchPrice:2399,retailPrice:1800,r23sc:2175,value:6},
   // -- Intel 8/9代 无K/T系列 (补充) --
@@ -520,7 +520,7 @@ const CPU_DATA = [
   {id:"i7-13700",name:"i7-13700",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake",cores:16,threads:24,bClock:2.1,bBoost:5.2,cache:"30MB",tdp:65,ram:"DDR5 5600",year:2023,ludashi:850000,timespy:13800,r23:28000,launchPrice:3099,retailPrice:700,r23sc:2250,value:5},
   {id:"i7-13700f",name:"i7-13700F",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake",cores:16,threads:24,bClock:2.1,bBoost:5.2,cache:"30MB",tdp:65,ram:"DDR5 5600",year:2023,ludashi:840000,timespy:13800,r23:27800,launchPrice:2899,retailPrice:650,r23sc:2250,value:5},
   {id:"i9-13900",name:"i9-13900",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake",cores:24,threads:32,bClock:2.0,bBoost:5.6,cache:"36MB",tdp:65,ram:"DDR5 5600",year:2023,ludashi:1050000,timespy:31000,r23:35000,launchPrice:4599,retailPrice:900,r23sc:2600,value:5},
-  {id:"i9-13900kf",name:"i9-13900KF",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake",cores:24,threads:32,bClock:3.0,bBoost:5.8,cache:"36MB",tdp:125,ram:"DDR5 5600",year:2022,ludashi:1100000,timespy:16500,r23:37300,launchPrice:4599,retailPrice:800,r23sc:2300,value:5},
+  {id:"i9-13900kf",name:"i9-13900KF",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake",cores:24,threads:32,bClock:3.0,bBoost:5.8,cache:"36MB",tdp:125,ram:"DDR5 5600",year:2022,ludashi:1100000,timespy:16500,r23:39700,launchPrice:4599,retailPrice:800,r23sc:2300,value:5},
 
   // -- Intel 14代 non-K 补充 --
   {id:"i5-14400",name:"i5-14400",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:10,threads:16,bClock:2.5,bBoost:4.7,cache:"20MB",tdp:65,ram:"DDR5 5600",year:2024,ludashi:580000,timespy:16000,r23:16300,launchPrice:1699,retailPrice:450,r23sc:2150,value:6},
@@ -528,7 +528,7 @@ const CPU_DATA = [
   {id:"i5-14600k",name:"i5-14600K",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:14,threads:20,bClock:3.5,bBoost:5.3,cache:"24MB",tdp:125,ram:"DDR5 5600",year:2023,ludashi:780000,timespy:22500,r23:25000,launchPrice:2499,retailPrice:600,r23sc:2450,value:6},
   {id:"i7-14700",name:"i7-14700",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:20,threads:28,bClock:2.1,bBoost:5.4,cache:"33MB",tdp:65,ram:"DDR5 5600",year:2024,ludashi:950000,timespy:28000,r23:32000,launchPrice:3099,retailPrice:750,r23sc:2500,value:5},
   {id:"i9-14900",name:"i9-14900",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:24,threads:32,bClock:2.0,bBoost:5.8,cache:"36MB",tdp:65,ram:"DDR5 5600",year:2024,ludashi:1100000,timespy:33000,r23:36000,launchPrice:4599,retailPrice:950,r23sc:2650,value:5},
-  {id:"i9-14900kf",name:"i9-14900KF",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:24,threads:32,bClock:3.2,bBoost:6.0,cache:"36MB",tdp:125,ram:"DDR5 5600",year:2023,ludashi:1180000,timespy:17500,r23:37800,launchPrice:4599,retailPrice:900,r23sc:2350,value:4},
+  {id:"i9-14900kf",name:"i9-14900KF",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:24,threads:32,bClock:3.2,bBoost:6.0,cache:"36MB",tdp:125,ram:"DDR5 5600",year:2023,ludashi:1180000,timespy:17500,r23:38700,launchPrice:4599,retailPrice:900,r23sc:2350,value:4},
   {id:"i9-14900t",name:"i9-14900T",brand:"Intel",type:"desktop",platform:"LGA1700",gen:"Raptor Lake-R",cores:24,threads:32,bClock:1.5,bBoost:5.1,cache:"36MB",tdp:35,ram:"DDR5 5600",year:2024,ludashi:850000,timespy:24000,r23:27000,launchPrice:4599,retailPrice:700,r23sc:2350,value:5},
 
   // -- AMD AM4 补充 --
@@ -653,7 +653,7 @@ const GPU_DATA = [
   {id:"rtx2060",name:"RTX 2060 6G",brand:"NVIDIA",type:"desktop",vram:"6GB GDDR6",arch:"Turing",cores:1920,bClock:1365,bBoost:1680,bus:"192-bit",tdp:160,year:2019,ludashi:320000,timespy:7600,launchPrice:2699,retailPrice:350,value:5},
   {id:"rtx2060s",name:"RTX 2060 Super 8G",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR6",arch:"Turing",cores:2176,bClock:1470,bBoost:1650,bus:"256-bit",tdp:175,year:2019,ludashi:370000,timespy:8800,launchPrice:3199,retailPrice:420,value:5},
   {id:"rtx2070s",name:"RTX 2070 Super 8G",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR6",arch:"Turing",cores:2560,bClock:1605,bBoost:1770,bus:"256-bit",tdp:215,year:2019,ludashi:420000,timespy:10500,launchPrice:3999,retailPrice:500,value:5},
-  {id:"rtx2080ti",name:"RTX 2080 Ti 11G",brand:"NVIDIA",type:"desktop",vram:"11GB GDDR6",arch:"Turing",cores:4352,bClock:1350,bBoost:1545,bus:"352-bit",tdp:250,year:2018,ludashi:500000,timespy:14500,launchPrice:8199,retailPrice:700,value:5},
+  {id:"rtx2080ti",name:"RTX 2080 Ti 11G",brand:"NVIDIA",type:"desktop",vram:"11GB GDDR6",arch:"Turing",cores:4352,bClock:1350,bBoost:1545,bus:"352-bit",tdp:250,year:2018,ludashi:500000,timespy:15045,launchPrice:8199,retailPrice:700,value:5},
 
   // === NVIDIA RTX 30 ===
   {id:"rtx3050",name:"RTX 3050 8G",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR6",arch:"Ampere",cores:2560,bClock:1552,bBoost:1777,bus:"128-bit",tdp:130,year:2022,ludashi:340000,timespy:6200,launchPrice:1899,retailPrice:350,value:5},
@@ -661,14 +661,14 @@ const GPU_DATA = [
   {id:"rtx3060ti",name:"RTX 3060 Ti 8G",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR6X",arch:"Ampere",cores:4864,bClock:1410,bBoost:1665,bus:"256-bit",tdp:200,year:2020,ludashi:470000,timespy:11800,launchPrice:2999,retailPrice:550,value:5},
   {id:"rtx3070",name:"RTX 3070 8G",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR6",arch:"Ampere",cores:5888,bClock:1500,bBoost:1725,bus:"256-bit",tdp:220,year:2020,ludashi:550000,timespy:13800,launchPrice:3899,retailPrice:650,value:5},
   {id:"rtx3080",name:"RTX 3080 10G",brand:"NVIDIA",type:"desktop",vram:"10GB GDDR6X",arch:"Ampere",cores:8704,bClock:1440,bBoost:1710,bus:"320-bit",tdp:320,year:2020,ludashi:720000,timespy:18000,launchPrice:5499,retailPrice:900,value:5},
-  {id:"rtx3090",name:"RTX 3090 24G",brand:"NVIDIA",type:"desktop",vram:"24GB GDDR6X",arch:"Ampere",cores:10496,bClock:1400,bBoost:1700,bus:"384-bit",tdp:350,year:2020,ludashi:880000,timespy:19900,launchPrice:11999,retailPrice:1500,value:4},
+  {id:"rtx3090",name:"RTX 3090 24G",brand:"NVIDIA",type:"desktop",vram:"24GB GDDR6X",arch:"Ampere",cores:10496,bClock:1400,bBoost:1700,bus:"384-bit",tdp:350,year:2020,ludashi:880000,timespy:20474,launchPrice:11999,retailPrice:1500,value:4},
 
   // === NVIDIA RTX 40 ===
-  {id:"rtx4060",name:"RTX 4060 8G",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR6",arch:"Ada Lovelace",cores:3072,bClock:1830,bBoost:2460,bus:"128-bit",tdp:115,year:2023,ludashi:460000,timespy:11000,launchPrice:2399,retailPrice:700,value:4},
+  {id:"rtx4060",name:"RTX 4060 8G",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR6",arch:"Ada Lovelace",cores:3072,bClock:1830,bBoost:2460,bus:"128-bit",tdp:115,year:2023,ludashi:460000,timespy:10570,launchPrice:2399,retailPrice:700,value:4},
   {id:"rtx4060ti",name:"RTX 4060 Ti 8G",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR6",arch:"Ada Lovelace",cores:4352,bClock:2310,bBoost:2535,bus:"128-bit",tdp:160,year:2023,ludashi:520000,timespy:13500,launchPrice:3199,retailPrice:900,value:4},
   {id:"rtx4070",name:"RTX 4070 12G",brand:"NVIDIA",type:"desktop",vram:"12GB GDDR6X",arch:"Ada Lovelace",cores:5888,bClock:1920,bBoost:2475,bus:"192-bit",tdp:200,year:2023,ludashi:650000,timespy:17800,launchPrice:4799,retailPrice:1200,value:4},
   {id:"rtx4070ti",name:"RTX 4070 Ti 12G",brand:"NVIDIA",type:"desktop",vram:"12GB GDDR6X",arch:"Ada Lovelace",cores:7680,bClock:2310,bBoost:2610,bus:"192-bit",tdp:285,year:2023,ludashi:880000,timespy:22800,launchPrice:6499,retailPrice:1600,value:4},
-  {id:"rtx4080",name:"RTX 4080 16G",brand:"NVIDIA",type:"desktop",vram:"16GB GDDR6X",arch:"Ada Lovelace",cores:9728,bClock:2205,bBoost:2505,bus:"256-bit",tdp:320,year:2022,ludashi:1050000,timespy:26700,launchPrice:9499,retailPrice:2200,value:3},
+  {id:"rtx4080",name:"RTX 4080 16G",brand:"NVIDIA",type:"desktop",vram:"16GB GDDR6X",arch:"Ada Lovelace",cores:9728,bClock:2205,bBoost:2505,bus:"256-bit",tdp:320,year:2022,ludashi:1050000,timespy:28754,launchPrice:9499,retailPrice:2200,value:3},
   {id:"rtx4090",name:"RTX 4090 24G",brand:"NVIDIA",type:"desktop",vram:"24GB GDDR6X",arch:"Ada Lovelace",cores:16384,bClock:2235,bBoost:2520,bus:"384-bit",tdp:450,year:2022,ludashi:1200000,timespy:36000,launchPrice:12999,retailPrice:4500,value:3},
 
   // === NVIDIA RTX 50 ===
@@ -687,21 +687,21 @@ const GPU_DATA = [
 
   // === AMD RX 6000 ===
   {id:"rx6600",name:"RX 6600 8G",brand:"AMD",type:"desktop",vram:"8GB GDDR6",arch:"RDNA 2",cores:1792,bClock:2044,bBoost:2491,bus:"128-bit",tdp:132,year:2021,ludashi:370000,timespy:8200,launchPrice:2499,retailPrice:400,value:5},
-  {id:"rx6600xt",name:"RX 6600 XT 8G",brand:"AMD",type:"desktop",vram:"8GB GDDR6",arch:"RDNA 2",cores:2048,bClock:1968,bBoost:2589,bus:"128-bit",tdp:160,year:2021,ludashi:420000,timespy:9700,launchPrice:2999,retailPrice:480,value:5},
+  {id:"rx6600xt",name:"RX 6600 XT 8G",brand:"AMD",type:"desktop",vram:"8GB GDDR6",arch:"RDNA 2",cores:2048,bClock:1968,bBoost:2589,bus:"128-bit",tdp:160,year:2021,ludashi:420000,timespy:9553,launchPrice:2999,retailPrice:480,value:5},
   {id:"rx6700xt",name:"RX 6700 XT 12G",brand:"AMD",type:"desktop",vram:"12GB GDDR6",arch:"RDNA 2",cores:2560,bClock:2321,bBoost:2581,bus:"192-bit",tdp:230,year:2021,ludashi:500000,timespy:12500,launchPrice:3699,retailPrice:600,value:5},
-  {id:"rx6800xt",name:"RX 6800 XT 16G",brand:"AMD",type:"desktop",vram:"16GB GDDR6",arch:"RDNA 2",cores:4608,bClock:1825,bBoost:2250,bus:"256-bit",tdp:300,year:2020,ludashi:700000,timespy:18500,launchPrice:5099,retailPrice:900,value:5},
+  {id:"rx6800xt",name:"RX 6800 XT 16G",brand:"AMD",type:"desktop",vram:"16GB GDDR6",arch:"RDNA 2",cores:4608,bClock:1825,bBoost:2250,bus:"256-bit",tdp:300,year:2020,ludashi:700000,timespy:19445,launchPrice:5099,retailPrice:900,value:5},
   {id:"rx6900xt",name:"RX 6900 XT 16G",brand:"AMD",type:"desktop",vram:"16GB GDDR6",arch:"RDNA 2",cores:5120,bClock:1825,bBoost:2250,bus:"256-bit",tdp:300,year:2020,ludashi:800000,timespy:21000,launchPrice:7999,retailPrice:1200,value:4},
 
   // === AMD RX 7000 ===
-  {id:"rx7600",name:"RX 7600 8G",brand:"AMD",type:"desktop",vram:"8GB GDDR6",arch:"RDNA 3",cores:2048,bClock:1720,bBoost:2655,bus:"128-bit",tdp:165,year:2023,ludashi:420000,timespy:10500,launchPrice:2699,retailPrice:650,value:4},
-  {id:"rx7700xt",name:"RX 7700 XT 12G",brand:"AMD",type:"desktop",vram:"12GB GDDR6",arch:"RDNA 3",cores:3456,bClock:1900,bBoost:2544,bus:"192-bit",tdp:245,year:2023,ludashi:550000,timespy:15500,launchPrice:3699,retailPrice:900,value:4},
+  {id:"rx7600",name:"RX 7600 8G",brand:"AMD",type:"desktop",vram:"8GB GDDR6",arch:"RDNA 3",cores:2048,bClock:1720,bBoost:2655,bus:"128-bit",tdp:165,year:2023,ludashi:420000,timespy:10828,launchPrice:2699,retailPrice:650,value:4},
+  {id:"rx7700xt",name:"RX 7700 XT 12G",brand:"AMD",type:"desktop",vram:"12GB GDDR6",arch:"RDNA 3",cores:3456,bClock:1900,bBoost:2544,bus:"192-bit",tdp:245,year:2023,ludashi:550000,timespy:16551,launchPrice:3699,retailPrice:900,value:4},
   {id:"rx7800xt",name:"RX 7800 XT 16G",brand:"AMD",type:"desktop",vram:"16GB GDDR6",arch:"RDNA 3",cores:3840,bClock:1295,bBoost:2430,bus:"256-bit",tdp:263,year:2023,ludashi:650000,timespy:19000,launchPrice:4099,retailPrice:1100,value:4},
   {id:"rx7900xt",name:"RX 7900 XT 20G",brand:"AMD",type:"desktop",vram:"20GB GDDR6",arch:"RDNA 3",cores:5376,bClock:1500,bBoost:2394,bus:"320-bit",tdp:300,year:2022,ludashi:850000,timespy:25200,launchPrice:7399,retailPrice:1800,value:4},
 
   {id:"rx7900gre",name:"RX 7900 GRE 16G",brand:"AMD",type:"desktop",vram:"16GB GDDR6",arch:"RDNA 3",cores:5120,bClock:1880,bBoost:2245,bus:"256-bit",tdp:260,year:2023,ludashi:820000,timespy:21200,launchPrice:5299,retailPrice:2200,value:7},  {id:"rx7900xtx",name:"RX 7900 XTX 24G",brand:"AMD",type:"desktop",vram:"24GB GDDR6",arch:"RDNA 3",cores:6144,bClock:1855,bBoost:2499,bus:"384-bit",tdp:355,year:2022,ludashi:1000000,timespy:29800,launchPrice:7999,retailPrice:2200,value:4},
 
   // === Intel Arc ===
-  {id:"a770",name:"Arc A770 16G",brand:"Intel Arc",type:"desktop",vram:"16GB GDDR6",arch:"Alchemist",cores:4096,bClock:2100,bBoost:2400,bus:"256-bit",tdp:225,year:2022,ludashi:480000,timespy:10500,launchPrice:3299,retailPrice:600,value:5},
+  {id:"a770",name:"Arc A770 16G",brand:"Intel Arc",type:"desktop",vram:"16GB GDDR6",arch:"Alchemist",cores:4096,bClock:2100,bBoost:2400,bus:"256-bit",tdp:225,year:2022,ludashi:480000,timespy:13303,launchPrice:3299,retailPrice:600,value:5},
 
 
   // === NVIDIA RTX 50 desktop (supplementary) ===
@@ -718,11 +718,11 @@ const GPU_DATA = [
   {id:"rtx4090d",name:"RTX 4090D 24G 🚫",brand:"NVIDIA",type:"desktop",vram:"24GB GDDR6X",arch:"Ada Lovelace",cores:14592,bClock:2280,bBoost:2520,bus:"384-bit",tdp:425,year:2024,ludashi:1250000,timespy:32000,launchPrice:12999,retailPrice:15000,value:1,tags:"中国特供"},
   {id:"rtx4080s",name:"RTX 4080 SUPER 16G",brand:"NVIDIA",type:"desktop",vram:"16GB GDDR6X",arch:"Ada Lovelace",cores:10240,bClock:2295,bBoost:2550,bus:"256-bit",tdp:320,year:2024,ludashi:1080000,timespy:28500,launchPrice:8099,retailPrice:6500,value:3},
   {id:"rtx4070tis",name:"RTX 4070 Ti SUPER 16G",brand:"NVIDIA",type:"desktop",vram:"16GB GDDR6X",arch:"Ada Lovelace",cores:8448,bClock:2340,bBoost:2610,bus:"256-bit",tdp:285,year:2024,ludashi:900000,timespy:23500,launchPrice:5299,retailPrice:4800,value:4},
-  {id:"rtx4070s",name:"RTX 4070 SUPER 12G",brand:"NVIDIA",type:"desktop",vram:"12GB GDDR6X",arch:"Ada Lovelace",cores:7168,bClock:1980,bBoost:2475,bus:"192-bit",tdp:220,year:2024,ludashi:780000,timespy:20500,launchPrice:4299,retailPrice:3800,value:4},
+  {id:"rtx4070s",name:"RTX 4070 SUPER 12G",brand:"NVIDIA",type:"desktop",vram:"12GB GDDR6X",arch:"Ada Lovelace",cores:7168,bClock:1980,bBoost:2475,bus:"192-bit",tdp:220,year:2024,ludashi:780000,timespy:21031,launchPrice:4299,retailPrice:3800,value:4},
 
   // === NVIDIA RTX 30 desktop (supplementary) ===
   {id:"rtx3080ti",name:"RTX 3080 Ti 12G",brand:"NVIDIA",type:"desktop",vram:"12GB GDDR6X",arch:"Ampere",cores:10240,bClock:1365,bBoost:1665,bus:"384-bit",tdp:350,year:2021,ludashi:880000,timespy:19800,launchPrice:8999,retailPrice:2200,value:5},
-  {id:"rtx3070ti",name:"RTX 3070 Ti 8G",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR6X",arch:"Ampere",cores:6144,bClock:1575,bBoost:1770,bus:"256-bit",tdp:290,year:2021,ludashi:750000,timespy:14500,launchPrice:4499,retailPrice:1200,value:6},
+  {id:"rtx3070ti",name:"RTX 3070 Ti 8G",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR6X",arch:"Ampere",cores:6144,bClock:1575,bBoost:1770,bus:"256-bit",tdp:290,year:2021,ludashi:750000,timespy:15159,launchPrice:4499,retailPrice:1200,value:6},
 
   // === NVIDIA RTX 20 desktop (supplementary) ===
   {id:"rtx2080s",name:"RTX 2080 SUPER 8G",brand:"NVIDIA",type:"desktop",vram:"8GB GDDR6",arch:"Turing",cores:3072,bClock:1605,bBoost:1815,bus:"256-bit",tdp:250,year:2019,ludashi:580000,timespy:11800,launchPrice:4999,retailPrice:800,value:6},
@@ -742,10 +742,10 @@ const GPU_DATA = [
 
   // === AMD RX 6000 desktop (supplementary) ===
   {id:"rx6950xt",name:"RX 6950 XT 16G",brand:"AMD",type:"desktop",vram:"16GB GDDR6",arch:"RDNA 2",cores:5120,bClock:1890,bBoost:2310,bus:"256-bit",tdp:335,year:2022,ludashi:920000,timespy:21800,launchPrice:7499,retailPrice:1300,value:5},
-  {id:"rx6800",name:"RX 6800 16G",brand:"AMD",type:"desktop",vram:"16GB GDDR6",arch:"RDNA 2",cores:3840,bClock:1700,bBoost:2105,bus:"256-bit",tdp:250,year:2020,ludashi:580000,timespy:14500,launchPrice:4599,retailPrice:900,value:5},
-  {id:"rx6750xt",name:"RX 6750 XT 12G",brand:"AMD",type:"desktop",vram:"12GB GDDR6",arch:"RDNA 2",cores:2560,bClock:2150,bBoost:2600,bus:"192-bit",tdp:230,year:2022,ludashi:540000,timespy:13300,launchPrice:3299,retailPrice:700,value:5},
-  {id:"rx6650xt",name:"RX 6650 XT 8G",brand:"AMD",type:"desktop",vram:"8GB GDDR6",arch:"RDNA 2",cores:2048,bClock:2055,bBoost:2635,bus:"128-bit",tdp:176,year:2022,ludashi:420000,timespy:10200,launchPrice:2499,retailPrice:550,value:5},
-  {id:"rx6500xt",name:"RX 6500 XT 4G",brand:"AMD",type:"desktop",vram:"4GB GDDR6",arch:"RDNA 2",cores:1024,bClock:2310,bBoost:2825,bus:"64-bit",tdp:107,year:2022,ludashi:210000,timespy:4500,launchPrice:1299,retailPrice:350,value:6},
+  {id:"rx6800",name:"RX 6800 16G",brand:"AMD",type:"desktop",vram:"16GB GDDR6",arch:"RDNA 2",cores:3840,bClock:1700,bBoost:2105,bus:"256-bit",tdp:250,year:2020,ludashi:580000,timespy:16140,launchPrice:4599,retailPrice:900,value:5},
+  {id:"rx6750xt",name:"RX 6750 XT 12G",brand:"AMD",type:"desktop",vram:"12GB GDDR6",arch:"RDNA 2",cores:2560,bClock:2150,bBoost:2600,bus:"192-bit",tdp:230,year:2022,ludashi:540000,timespy:13563,launchPrice:3299,retailPrice:700,value:5},
+  {id:"rx6650xt",name:"RX 6650 XT 8G",brand:"AMD",type:"desktop",vram:"8GB GDDR6",arch:"RDNA 2",cores:2048,bClock:2055,bBoost:2635,bus:"128-bit",tdp:176,year:2022,ludashi:420000,timespy:10070,launchPrice:2499,retailPrice:550,value:5},
+  {id:"rx6500xt",name:"RX 6500 XT 4G",brand:"AMD",type:"desktop",vram:"4GB GDDR6",arch:"RDNA 2",cores:1024,bClock:2310,bBoost:2825,bus:"64-bit",tdp:107,year:2022,ludashi:210000,timespy:4950,launchPrice:1299,retailPrice:350,value:6},
   {id:"rx6400",name:"RX 6400 4G",brand:"AMD",type:"desktop",vram:"4GB GDDR6",arch:"RDNA 2",cores:768,bClock:2039,bBoost:2321,bus:"64-bit",tdp:53,year:2022,ludashi:160000,timespy:3200,launchPrice:999,retailPrice:280,value:6},
 
   // === Laptop GPUs ===
